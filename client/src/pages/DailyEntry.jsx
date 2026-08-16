@@ -151,11 +151,11 @@ export default function DailyEntry() {
                 gap: '0.35rem',
                 padding: '0.38rem 0.65rem',
                 borderRadius: 'var(--radius-full)',
-                backgroundColor: isToday ? 'var(--primary-light)' : 'var(--bg-surface-subtle)',
-                border: `1.5px solid ${isToday ? '#c7d2fe' : 'var(--border)'}`,
+                backgroundColor: isToday ? 'rgba(124, 92, 252, 0.15)' : 'var(--bg-surface-elevated)',
+                border: `1px solid ${isToday ? 'rgba(124, 92, 252, 0.4)' : 'var(--border)'}`,
                 cursor: 'pointer',
                 maxWidth: '100%',
-                color: isToday ? 'var(--primary)' : 'var(--text-main)',
+                color: isToday ? 'var(--highlight)' : 'var(--text-main)',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -220,58 +220,90 @@ export default function DailyEntry() {
       {/* Shift Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.875rem' }}>
         {[
-          { id: 'morning', label: '🌅 Morning', color: '#d97706' },
-          { id: 'evening', label: '🌙 Night',   color: '#4338ca' },
-          { id: 'both',    label: 'Both',       color: 'var(--primary)' },
-        ].map(t => (
-          <button
-            key={t.id}
-            onClick={() => setActiveShift(t.id)}
-            style={{
-              flex: 1,
-              padding: '0.6rem 0',
-              borderRadius: 'var(--radius-full)',
-              border: `1.5px solid ${activeShift === t.id ? t.color : 'var(--border)'}`,
-              background: activeShift === t.id ? '#fff' : 'var(--bg-surface-subtle)',
-              color: activeShift === t.id ? t.color : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: '0.8125rem',
-              cursor: 'pointer',
-              transition: 'all 0.15s',
-              boxShadow: activeShift === t.id ? 'var(--shadow-sm)' : 'none'
-            }}
-          >
-            {t.label}
-          </button>
-        ))}
+          { id: 'morning', label: '🌅 Morning', activeBg: 'rgba(245, 158, 11, 0.15)', activeColor: '#F59E0B', activeBorder: 'rgba(245, 158, 11, 0.4)', shadow: '0 2px 10px rgba(245, 158, 11, 0.2)' },
+          { id: 'evening', label: '🌙 Night',   activeBg: 'rgba(124, 92, 252, 0.15)', activeColor: '#A78BFA', activeBorder: 'rgba(124, 92, 252, 0.4)', shadow: '0 2px 10px rgba(124, 92, 252, 0.2)' },
+          { id: 'both',    label: '✨ Both',     activeBg: 'var(--primary-gradient)', activeColor: '#ffffff', activeBorder: 'transparent', shadow: '0 3px 14px rgba(124, 92, 252, 0.35)' },
+        ].map(t => {
+          const isActive = activeShift === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setActiveShift(t.id)}
+              style={{
+                flex: 1,
+                padding: '0.65rem 0',
+                borderRadius: 'var(--radius-full)',
+                border: `1px solid ${isActive ? t.activeBorder : 'var(--border)'}`,
+                background: isActive ? t.activeBg : 'var(--bg-surface-elevated)',
+                color: isActive ? t.activeColor : 'var(--text-secondary)',
+                fontWeight: 700,
+                fontSize: '0.8125rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: isActive ? t.shadow : 'none'
+              }}
+            >
+              {t.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Action Buttons */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
         {activeShift === 'morning' && (
-          <button className="btn btn-primary btn-full" onClick={handleSaveMorning} disabled={savingMorning || loading}>
+          <button
+            className="btn btn-full"
+            onClick={handleSaveMorning}
+            disabled={savingMorning || loading}
+            style={{
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#ffffff',
+              boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)'
+            }}
+          >
             <Sun size={16} /> {savingMorning ? 'Saving...' : 'Save Morning Shift'}
           </button>
         )}
         {activeShift === 'evening' && (
-          <button className="btn btn-primary btn-full" onClick={handleSaveNight} disabled={savingNight || loading}
-            style={{ background: '#4338ca', boxShadow: '0 2px 12px rgba(67,56,202,0.35)' }}>
+          <button
+            className="btn btn-full"
+            onClick={handleSaveNight}
+            disabled={savingNight || loading}
+            style={{
+              background: 'linear-gradient(135deg, #7C5CFC 0%, #6366F1 100%)',
+              color: '#ffffff',
+              boxShadow: '0 4px 16px rgba(124, 92, 252, 0.35)'
+            }}
+          >
             <Moon size={16} /> {savingNight ? 'Saving...' : 'Save Night Shift'}
           </button>
         )}
         {activeShift === 'both' && (
           <>
-            <button className="btn btn-secondary btn-sm" onClick={handleSaveMorning} disabled={savingMorning || loading}
-              style={{ flex: 1, borderColor: '#fde68a', color: '#b45309' }}>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={handleSaveMorning}
+              disabled={savingMorning || loading}
+              style={{ flex: 1, borderColor: 'rgba(245, 158, 11, 0.4)', color: '#F59E0B', background: 'rgba(245, 158, 11, 0.1)' }}
+            >
               <Sun size={14} /> {savingMorning ? '...' : 'Morning'}
             </button>
-            <button className="btn btn-secondary btn-sm" onClick={handleSaveNight} disabled={savingNight || loading}
-              style={{ flex: 1, borderColor: '#c7d2fe', color: '#4338ca' }}>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={handleSaveNight}
+              disabled={savingNight || loading}
+              style={{ flex: 1, borderColor: 'rgba(124, 92, 252, 0.4)', color: '#A78BFA', background: 'rgba(124, 92, 252, 0.1)' }}
+            >
               <Moon size={14} /> {savingNight ? '...' : 'Night'}
             </button>
-            <button className="btn btn-primary btn-sm" onClick={handleSaveBoth} disabled={savingAll || loading}
-              style={{ flex: 1 }}>
-              <Save size={14} /> {savingAll ? '...' : 'Both'}
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={handleSaveBoth}
+              disabled={savingAll || loading}
+              style={{ flex: 1.2 }}
+            >
+              <Save size={14} /> {savingAll ? '...' : 'Save Both'}
             </button>
           </>
         )}

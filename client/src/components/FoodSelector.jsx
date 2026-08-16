@@ -154,8 +154,8 @@ export default function FoodSelector({
                     width: '16px',
                     height: '16px',
                     borderRadius: '4px',
-                    border: isSelected ? 'none' : '1.5px solid #94a3b8',
-                    backgroundColor: isSelected ? 'var(--primary)' : '#ffffff',
+                    border: isSelected ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
+                    backgroundColor: isSelected ? 'var(--primary)' : 'rgba(255, 255, 255, 0.05)',
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -179,20 +179,20 @@ export default function FoodSelector({
           style={{
             marginTop: '0.5rem',
             padding: '1rem',
-            backgroundColor: 'var(--primary-light)',
-            border: '1px solid var(--border-focus)',
+            backgroundColor: 'var(--bg-surface-elevated)',
+            border: '1px solid rgba(124, 92, 252, 0.3)',
             borderRadius: 'var(--radius-md)',
             animation: 'fadeIn 0.2s ease-out'
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--primary)' }}>
+            <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--highlight)' }}>
               Add New Dish to Library
             </span>
             <button
               type="button"
               onClick={() => setShowAddModal(false)}
-              style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted)' }}
+              style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-secondary)' }}
             >
               <X size={16} />
             </button>
@@ -212,7 +212,8 @@ export default function FoodSelector({
                 borderRadius: 'var(--radius-sm)',
                 border: '1px solid var(--border)',
                 fontSize: '0.875rem',
-                backgroundColor: '#ffffff'
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--text-main)'
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleCreateDish(e);
@@ -227,7 +228,8 @@ export default function FoodSelector({
                 borderRadius: 'var(--radius-sm)',
                 border: '1px solid var(--border)',
                 fontSize: '0.875rem',
-                backgroundColor: '#ffffff'
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--text-main)'
               }}
             >
               <option value="Curry">Curry</option>

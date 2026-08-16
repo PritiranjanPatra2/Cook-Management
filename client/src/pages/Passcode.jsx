@@ -62,14 +62,14 @@ export default function Passcode({ onAuthenticated }) {
       <div style={{ textAlign: 'center' }}>
         <div style={{
           width: 72, height: 72, borderRadius: 22,
-          background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+          background: 'linear-gradient(135deg, #7C5CFC 0%, #6366F1 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto 1rem',
-          boxShadow: '0 12px 32px rgba(99,102,241,0.45)'
+          boxShadow: '0 12px 32px rgba(124, 92, 252, 0.45)'
         }}>
           <ChefHat size={38} color="white" />
         </div>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: 800, color: '#fff', marginBottom: '0.25rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
           Cook Manager
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.9375rem' }}>

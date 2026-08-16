@@ -132,8 +132,7 @@ export default function FoodMeals() {
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem',
-          backgroundColor: '#ffffff'
+          gap: '1rem'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -142,8 +141,9 @@ export default function FoodMeals() {
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)',
+              backgroundColor: 'rgba(124, 92, 252, 0.15)',
+              color: 'var(--highlight)',
+              border: '1px solid rgba(124, 92, 252, 0.3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -152,16 +152,16 @@ export default function FoodMeals() {
             <ChefHat size={22} />
           </div>
           <div>
-            <h2 style={{ fontSize: '1.375rem', fontWeight: '800' }}>Dish & Recipe Library</h2>
+            <h2 style={{ fontSize: '1.375rem', fontWeight: '800', color: 'var(--text-main)' }}>Dish & Recipe Library</h2>
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
               Manage dishes available during daily shift entry ({dishes.length} total dishes)
             </span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap', width: '100%', maxWidth: '440px', justifyContent: 'flex-start' }}>
           {/* Search */}
-          <div style={{ position: 'relative', width: '220px' }}>
+          <div style={{ position: 'relative', flex: '1 1 180px', minWidth: '150px' }}>
             <Search size={15} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
             <input
               type="text"
@@ -174,7 +174,8 @@ export default function FoodMeals() {
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border)',
                 fontSize: '0.8125rem',
-                backgroundColor: 'var(--bg-surface-subtle)'
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--text-main)'
               }}
             />
           </div>
@@ -187,6 +188,7 @@ export default function FoodMeals() {
               setShowAddModal(true);
             }}
             className="btn btn-primary"
+            style={{ flexShrink: 0, whiteSpace: 'nowrap' }}
           >
             <Plus size={16} />
             <span>Add New Dish</span>
@@ -213,7 +215,8 @@ export default function FoodMeals() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   opacity: dish.active ? 1 : 0.6,
-                  borderLeft: `4px solid ${dish.active ? 'var(--primary)' : '#94a3b8'}`
+                  borderLeft: `4px solid ${dish.active ? 'var(--primary)' : 'var(--text-muted)'}`,
+                  backgroundColor: 'var(--bg-surface)'
                 }}
               >
                 <div>
@@ -222,13 +225,13 @@ export default function FoodMeals() {
                       {dish.name}
                     </h4>
                     {!dish.active && (
-                      <span style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem', borderRadius: '4px', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: '700' }}>
+                      <span style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem', borderRadius: '4px', backgroundColor: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)', fontWeight: '700' }}>
                         Disabled
                       </span>
                     )}
                   </div>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'inline-block', marginTop: '2px' }}>
-                    Category: <b>{dish.category || 'Other'}</b>
+                    Category: <b style={{ color: 'var(--text-secondary)' }}>{dish.category || 'Other'}</b>
                   </span>
                 </div>
 
@@ -238,8 +241,8 @@ export default function FoodMeals() {
                     onClick={() => handleToggleActive(dish)}
                     style={{
                       border: '1px solid var(--border)',
-                      backgroundColor: dish.active ? '#ecfdf5' : '#f1f5f9',
-                      color: dish.active ? '#047857' : '#94a3b8',
+                      backgroundColor: dish.active ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                      color: dish.active ? '#4ade80' : 'var(--text-muted)',
                       padding: '0.35rem',
                       borderRadius: 'var(--radius-sm)',
                       cursor: 'pointer'
@@ -259,8 +262,8 @@ export default function FoodMeals() {
                     }}
                     style={{
                       border: '1px solid var(--border)',
-                      backgroundColor: '#ffffff',
-                      color: 'var(--text-muted)',
+                      backgroundColor: 'var(--bg-surface-elevated)',
+                      color: 'var(--text-secondary)',
                       padding: '0.35rem',
                       borderRadius: 'var(--radius-sm)',
                       cursor: 'pointer'
@@ -274,9 +277,9 @@ export default function FoodMeals() {
                   <button
                     onClick={() => handleDelete(dish)}
                     style={{
-                      border: '1px solid #fecaca',
-                      backgroundColor: '#fef2f2',
-                      color: '#ef4444',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                      color: '#f87171',
                       padding: '0.35rem',
                       borderRadius: 'var(--radius-sm)',
                       cursor: 'pointer'
@@ -298,9 +301,9 @@ export default function FoodMeals() {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            zIndex: 60,
-            backdropFilter: 'blur(4px)',
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            zIndex: 150,
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -310,16 +313,16 @@ export default function FoodMeals() {
         >
           <div
             className="card fade-in"
-            style={{ width: '100%', maxWidth: '420px', backgroundColor: '#ffffff' }}
+            style={{ width: '100%', maxWidth: '420px', backgroundColor: '#121824', border: '1px solid var(--border)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>
                 {editingDish ? 'Edit Dish' : 'Add New Dish'}
               </h3>
               <button
                 onClick={() => setShowAddModal(false)}
-                style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted)' }}
+                style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-secondary)' }}
               >
                 <X size={18} />
               </button>
@@ -327,7 +330,7 @@ export default function FoodMeals() {
 
             <form onSubmit={handleCreateOrUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                   Dish Name
                 </label>
                 <input
@@ -342,13 +345,15 @@ export default function FoodMeals() {
                     padding: '0.5rem 0.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border)',
-                    fontSize: '0.875rem'
+                    fontSize: '0.875rem',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-main)'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                   Category
                 </label>
                 <select
@@ -359,7 +364,9 @@ export default function FoodMeals() {
                     padding: '0.5rem 0.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border)',
-                    fontSize: '0.875rem'
+                    fontSize: '0.875rem',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-main)'
                   }}
                 >
                   {DISH_CATEGORIES.map((cat) => (

@@ -123,29 +123,30 @@ export default function CalendarPage({ onNavigate }) {
           justifyContent: 'center',
           gap: '0.75rem',
           padding: '0.625rem 0.75rem',
-          backgroundColor: '#ffffff',
+          backgroundColor: 'var(--bg-surface)',
           borderRadius: 'var(--radius-md)',
           border: '1px solid var(--border)',
-          fontSize: '0.75rem'
+          fontSize: '0.75rem',
+          color: 'var(--text-secondary)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
           <span className="status-dot present" style={{ width: 8, height: 8 }} />
-          <span style={{ fontWeight: '600' }}>Present</span>
+          <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>Present</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
           <span className="status-dot leave" style={{ width: 8, height: 8 }} />
-          <span style={{ fontWeight: '600' }}>Leave</span>
+          <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>Leave</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
           <span className="status-dot late" style={{ width: 8, height: 8 }} />
-          <span style={{ fontWeight: '600' }}>Late</span>
+          <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>Late</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
           <span className="status-dot unrecorded" style={{ width: 8, height: 8 }} />
           <span style={{ fontWeight: '600', color: 'var(--text-muted)' }}>Not Recorded</span>
         </div>
-        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>• Dot 1 = Morning, Dot 2 = Evening</span>
+        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>• Dot 1 = Morning, Dot 2 = Night</span>
       </div>
 
       {loading ? (
@@ -180,26 +181,16 @@ export default function CalendarPage({ onNavigate }) {
             ))}
           </div>
 
-          {/* Days Cells */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '2px'
-            }}
-          >
-            {calendarGrid.map((day, idx) => {
+          <div className="cal-grid">
+            {calendarGrid.map((day, index) => {
               if (!day.isCurrentMonth) {
                 return (
                   <div
-                    key={`empty-${idx}`}
-                    style={{
-                      minHeight: '60px',
-                      borderRadius: '6px',
-                      backgroundColor: 'var(--bg-surface-subtle)',
-                      opacity: 0.25
-                    }}
-                  />
+                    key={`empty-${index}`}
+                    className="cal-cell outside"
+                  >
+                    <span>{day.dayNumber || ''}</span>
+                  </div>
                 );
               }
 
@@ -208,46 +199,22 @@ export default function CalendarPage({ onNavigate }) {
 
               return (
                 <div
-                  key={day.dateString}
+                  key={day.dateString || index}
                   onClick={() => handleDayClick(day)}
-                  style={{
-                    minHeight: '60px',
-                    padding: '5px 2px 4px',
-                    borderRadius: '6px',
-                    border: `1.5px solid ${isToday ? 'var(--primary)' : 'var(--border)'}`,
-                    backgroundColor: isToday ? 'var(--primary-light)' : '#ffffff',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '4px',
-                    overflow: 'hidden'
-                  }}
+                  className={`cal-cell ${isToday ? 'today' : ''}`}
                 >
-                  {/* Day Number */}
-                  <span
-                    style={{
-                      fontSize: '0.8125rem',
-                      fontWeight: isToday ? '800' : '600',
-                      color: isToday ? 'var(--primary)' : 'var(--text-main)',
-                      lineHeight: 1
-                    }}
-                  >
-                    {day.dayNumber}
-                  </span>
-
-                  {/* Morning & Evening Dual Dots */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
+                  <span>{day.dayNumber}</span>
+                  {/* Status Dots container */}
+                  <div style={{ display: 'flex', gap: '3px', marginTop: '2px', justifyContent: 'center' }}>
                     <span
                       className={`status-dot ${morning?.status || 'unrecorded'}`}
-                      style={{ width: '7px', height: '7px', flexShrink: 0 }}
+                      style={{ width: 6, height: 6 }}
                       title={`Morning: ${morning?.status || 'Not Recorded'}`}
                     />
                     <span
                       className={`status-dot ${evening?.status || 'unrecorded'}`}
-                      style={{ width: '7px', height: '7px', flexShrink: 0 }}
-                      title={`Evening: ${evening?.status || 'Not Recorded'}`}
+                      style={{ width: 6, height: 6 }}
+                      title={`Night: ${evening?.status || 'Not Recorded'}`}
                     />
                   </div>
                 </div>
@@ -263,9 +230,9 @@ export default function CalendarPage({ onNavigate }) {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            zIndex: 55,
-            backdropFilter: 'blur(4px)',
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            zIndex: 150,
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -275,16 +242,16 @@ export default function CalendarPage({ onNavigate }) {
         >
           <div
             className="card fade-in"
-            style={{ width: '100%', maxWidth: '480px', backgroundColor: '#ffffff' }}
+            style={{ width: '100%', maxWidth: '480px', backgroundColor: '#121824', border: '1px solid var(--border)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>
                 {formatDate(selectedDayInfo.dateString)}
               </h3>
               <button
                 onClick={() => setSelectedDayInfo(null)}
-                style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted)' }}
+                style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-secondary)' }}
               >
                 <X size={18} />
               </button>
@@ -292,42 +259,42 @@ export default function CalendarPage({ onNavigate }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* Morning Info */}
-              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-surface-subtle)', border: '1px solid var(--border)' }}>
+              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontWeight: '700', fontSize: '0.875rem' }}>🌅 Morning Shift</span>
+                  <span style={{ fontWeight: '700', fontSize: '0.875rem', color: 'var(--text-main)' }}>🌅 Morning Shift</span>
                   <StatusBadge status={selectedDayInfo.morning?.status || 'unrecorded'} size="sm" />
                 </div>
-                <p style={{ fontSize: '0.8125rem', color: 'var(--primary)', fontWeight: '600' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--highlight)', fontWeight: '600' }}>
                   🍲 {selectedDayInfo.morning?.foods?.map((f) => f.name || f).join(', ') || 'No food logged'}
                 </p>
                 {selectedDayInfo.morning?.reason && (
-                  <p style={{ fontSize: '0.75rem', color: '#b91c1c', marginTop: '2px' }}>
+                  <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '2px' }}>
                     Reason: {selectedDayInfo.morning.reason}
                   </p>
                 )}
                 {selectedDayInfo.morning?.note && (
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
                     Note: {selectedDayInfo.morning.note}
                   </p>
                 )}
               </div>
 
               {/* Evening Info */}
-              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-surface-subtle)', border: '1px solid var(--border)' }}>
+              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontWeight: '700', fontSize: '0.875rem' }}>🌙 Evening Shift</span>
+                  <span style={{ fontWeight: '700', fontSize: '0.875rem', color: 'var(--text-main)' }}>🌙 Night Shift</span>
                   <StatusBadge status={selectedDayInfo.evening?.status || 'unrecorded'} size="sm" />
                 </div>
-                <p style={{ fontSize: '0.8125rem', color: 'var(--primary)', fontWeight: '600' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--highlight)', fontWeight: '600' }}>
                   🍲 {selectedDayInfo.evening?.foods?.map((f) => f.name || f).join(', ') || 'No food logged'}
                 </p>
                 {selectedDayInfo.evening?.reason && (
-                  <p style={{ fontSize: '0.75rem', color: '#b91c1c', marginTop: '2px' }}>
+                  <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '2px' }}>
                     Reason: {selectedDayInfo.evening.reason}
                   </p>
                 )}
                 {selectedDayInfo.evening?.note && (
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
                     Note: {selectedDayInfo.evening.note}
                   </p>
                 )}

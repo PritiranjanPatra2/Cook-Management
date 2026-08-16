@@ -79,8 +79,8 @@ export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStart
       <div className="card" style={{ marginBottom: '0.875rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <CalendarDays size={18} color="var(--primary)" />
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(124, 92, 252, 0.15)', border: '1px solid rgba(124, 92, 252, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <CalendarDays size={18} color="var(--highlight)" />
             </div>
             <div>
               <div style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Current Period</div>
@@ -109,7 +109,7 @@ export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStart
           style={{
             display: 'flex',
             width: '100%',
-            backgroundColor: 'var(--bg-surface-subtle)',
+            backgroundColor: 'var(--bg-secondary)',
             borderRadius: 'var(--radius-full)',
             padding: '3px',
             border: '1px solid var(--border)'
@@ -137,52 +137,56 @@ export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStart
       {/* Stat Grid (2×2) */}
       <div className="stat-grid">
         <div className="stat-card">
-          <div className="stat-card-icon" style={{ background: '#eef2ff' }}>
-            <CalendarDays size={18} color="#4f46e5" />
+          <div className="stat-card-icon" style={{ background: 'rgba(124, 92, 252, 0.15)', border: '1px solid rgba(124, 92, 252, 0.3)' }}>
+            <CalendarDays size={18} color="var(--highlight)" />
           </div>
           <div className="stat-card-value">{expectedShifts}</div>
           <div className="stat-card-label">Expected Shifts</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-card-icon" style={{ background: '#ecfdf5' }}>
-            <CheckCircle2 size={18} color="#10b981" />
+          <div className="stat-card-icon" style={{ background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
+            <CheckCircle2 size={18} color="#22C55E" />
           </div>
-          <div className="stat-card-value" style={{ color: '#10b981' }}>{presentCount}</div>
+          <div className="stat-card-value" style={{ color: '#22C55E' }}>{presentCount}</div>
           <div className="stat-card-label">Present Shifts</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-card-icon" style={{ background: '#fef2f2' }}>
-            <XCircle size={18} color="#ef4444" />
+          <div className="stat-card-icon" style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+            <XCircle size={18} color="#EF4444" />
           </div>
-          <div className="stat-card-value" style={{ color: '#ef4444' }}>{leaveCount}</div>
+          <div className="stat-card-value" style={{ color: '#EF4444' }}>{leaveCount}</div>
           <div className="stat-card-label">Leave Shifts</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-card-icon" style={{ background: '#f0fdf4' }}>
-            <TrendingUp size={18} color="#22c55e" />
+          <div className="stat-card-icon" style={{ background: 'rgba(34, 211, 238, 0.15)', border: '1px solid rgba(34, 211, 238, 0.3)' }}>
+            <TrendingUp size={18} color="#22D3EE" />
           </div>
-          <div className="stat-card-value" style={{ color: '#22c55e' }}>{attendancePct}%</div>
+          <div className="stat-card-value" style={{ color: '#22D3EE' }}>{attendancePct}%</div>
           <div className="stat-card-label">Attendance Rate</div>
         </div>
       </div>
 
       {/* Secondary Stats Row */}
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.875rem' }}>
-        <div style={{ flex: 1, background: '#f5f3ff', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Clock size={16} color="#8b5cf6" />
+        <div style={{ flex: 1, background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.625rem', border: '1px solid var(--border)' }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(167, 139, 250, 0.15)', border: '1px solid rgba(167, 139, 250, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Clock size={16} color="var(--highlight)" />
+          </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: '#6d28d9' }}>{lateCount}</div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#7c3aed' }}>Late Shifts</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: 'var(--highlight)' }}>{lateCount}</div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)' }}>Late Shifts</div>
           </div>
         </div>
-        <div style={{ flex: 1, background: '#f8fafc', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid var(--border)' }}>
-          <HelpCircle size={16} color="#94a3b8" />
+        <div style={{ flex: 1, background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.625rem', border: '1px solid var(--border)' }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <HelpCircle size={16} color="var(--text-muted)" />
+          </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: '#475569' }}>{notRecorded}</div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8' }}>Not Recorded</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: 'var(--text-main)' }}>{notRecorded}</div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)' }}>Not Recorded</div>
           </div>
         </div>
       </div>
@@ -269,16 +273,17 @@ export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStart
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                   <span style={{
                     width: 24, height: 24, borderRadius: '50%',
-                    background: idx === 0 ? '#fef3c7' : idx === 1 ? '#f1f5f9' : '#fef9ee',
+                    background: idx === 0 ? 'rgba(245, 158, 11, 0.2)' : idx === 1 ? 'rgba(167, 139, 250, 0.2)' : 'rgba(255, 255, 255, 0.06)',
+                    border: `1px solid ${idx === 0 ? 'rgba(245, 158, 11, 0.4)' : idx === 1 ? 'rgba(167, 139, 250, 0.4)' : 'var(--border)'}`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: '0.75rem', fontWeight: 800,
-                    color: idx === 0 ? '#b45309' : idx === 1 ? '#475569' : '#92400e'
+                    color: idx === 0 ? '#F59E0B' : idx === 1 ? 'var(--highlight)' : 'var(--text-muted)'
                   }}>
                     {idx + 1}
                   </span>
-                  <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{food.name}</span>
+                  <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)' }}>{food.name}</span>
                 </div>
-                <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: 'var(--primary)' }}>{food.count}×</span>
+                <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: 'var(--highlight)' }}>{food.count}×</span>
               </div>
             ))}
           </div>

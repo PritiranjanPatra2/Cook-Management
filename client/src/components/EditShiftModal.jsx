@@ -99,9 +99,9 @@ export default function EditShiftModal({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.6)',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
         zIndex: 150,
-        backdropFilter: 'blur(6px)',
+        backdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center'
@@ -115,11 +115,13 @@ export default function EditShiftModal({
           maxWidth: '520px',
           maxHeight: '90vh',
           overflowY: 'auto',
-          backgroundColor: '#ffffff',
+          backgroundColor: '#121824',
+          border: '1px solid var(--border)',
+          borderBottom: 'none',
           position: 'relative',
           padding: '1rem 1.25rem 1.5rem',
           borderRadius: '20px 20px 0 0',
-          boxShadow: '0 -8px 30px rgba(0,0,0,0.18)',
+          boxShadow: '0 -8px 30px rgba(0,0,0,0.7)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem'
@@ -132,7 +134,7 @@ export default function EditShiftModal({
             width: '38px',
             height: '4px',
             borderRadius: '2px',
-            backgroundColor: '#cbd5e1',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
             margin: '0 auto 0.25rem',
             flexShrink: 0
           }}
@@ -146,12 +148,13 @@ export default function EditShiftModal({
                 width: '38px',
                 height: '38px',
                 borderRadius: '10px',
-                backgroundColor: isMorning ? '#fef3c7' : '#e0e7ff',
+                backgroundColor: isMorning ? 'rgba(245, 158, 11, 0.15)' : 'rgba(124, 92, 252, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '1.25rem',
-                flexShrink: 0
+                flexShrink: 0,
+                border: `1px solid ${isMorning ? 'rgba(245, 158, 11, 0.3)' : 'rgba(124, 92, 252, 0.3)'}`
               }}
             >
               {isMorning ? '🌅' : '🌙'}
@@ -173,12 +176,12 @@ export default function EditShiftModal({
               height: '32px',
               borderRadius: '50%',
               border: '1px solid var(--border)',
-              background: 'var(--bg-surface-subtle)',
+              background: 'var(--bg-surface-elevated)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: 'var(--text-muted)'
+              color: 'var(--text-secondary)'
             }}
           >
             <X size={16} />
@@ -187,7 +190,7 @@ export default function EditShiftModal({
 
         {/* 4-Column Balanced Status Grid */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.45rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.45rem' }}>
             Shift Status
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.35rem' }}>
@@ -205,14 +208,13 @@ export default function EditShiftModal({
                     gap: '0.3rem',
                     padding: '0.5rem 0.25rem',
                     borderRadius: 'var(--radius-md)',
-                    border: `1.5px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
-                    backgroundColor: isSelected ? opt.bgColor : '#ffffff',
+                    border: `1px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
+                    backgroundColor: isSelected ? opt.bgColor : 'var(--bg-surface-elevated)',
                     color: isSelected ? opt.textColor : 'var(--text-muted)',
                     fontWeight: isSelected ? '700' : '600',
                     fontSize: '0.8125rem',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
+                    transition: 'all 0.15s ease'
                   }}
                 >
                   <span
@@ -235,7 +237,7 @@ export default function EditShiftModal({
         {/* Foods */}
         {showFood && (
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.45rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.45rem' }}>
               Foods Prepared ({foods.length})
             </label>
             <FoodSelector
@@ -250,7 +252,7 @@ export default function EditShiftModal({
         {/* Reason */}
         {showReason && (
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
               <AlertTriangle size={14} color="#ef4444" />
               <span>Reason for Absence</span>
             </label>
@@ -261,8 +263,8 @@ export default function EditShiftModal({
                 width: '100%',
                 padding: '0.5rem 0.75rem',
                 borderRadius: 'var(--radius-md)',
-                border: '1.5px solid var(--border)',
-                backgroundColor: 'var(--bg-surface-subtle)',
+                border: '1px solid var(--border)',
+                backgroundColor: 'var(--bg-secondary)',
                 fontSize: '0.875rem',
                 color: 'var(--text-main)',
                 marginBottom: '0.4rem',
@@ -287,8 +289,9 @@ export default function EditShiftModal({
                   width: '100%',
                   padding: '0.5rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
-                  border: '1.5px solid var(--border)',
-                  backgroundColor: '#ffffff',
+                  border: '1px solid var(--border)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-main)',
                   fontSize: '0.875rem',
                   outline: 'none'
                 }}
@@ -299,7 +302,7 @@ export default function EditShiftModal({
 
         {/* Note */}
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
             Note (Optional)
           </label>
           <input
@@ -311,8 +314,8 @@ export default function EditShiftModal({
               width: '100%',
               padding: '0.5rem 0.75rem',
               borderRadius: 'var(--radius-md)',
-              border: '1.5px solid var(--border)',
-              backgroundColor: 'var(--bg-surface-subtle)',
+              border: '1px solid var(--border)',
+              backgroundColor: 'var(--bg-secondary)',
               fontSize: '0.875rem',
               color: 'var(--text-main)',
               outline: 'none'
@@ -331,12 +334,12 @@ export default function EditShiftModal({
           <div
             style={{
               padding: '0.875rem',
-              backgroundColor: '#fef2f2',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid #fecaca'
+              border: '1px solid rgba(239, 68, 68, 0.3)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#b91c1c', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#f87171', marginBottom: '0.5rem' }}>
               <AlertTriangle size={16} />
               <span style={{ fontSize: '0.8125rem', fontWeight: '700' }}>
                 Are you sure you want to delete this shift entry?

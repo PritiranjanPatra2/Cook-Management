@@ -5,8 +5,8 @@ export default function StatCard({
   value,
   subValue,
   icon: Icon,
-  accentColor = '#4f46e5',
-  bgColor = '#ffffff',
+  accentColor = '#7C5CFC',
+  bgColor = 'var(--bg-surface-elevated)',
   extraBadge
 }) {
   return (
@@ -18,7 +18,7 @@ export default function StatCard({
         justifyContent: 'space-between',
         position: 'relative',
         overflow: 'hidden',
-        borderLeft: `4px solid ${accentColor}`,
+        borderLeft: `3px solid ${accentColor}`,
         backgroundColor: bgColor
       }}
     >

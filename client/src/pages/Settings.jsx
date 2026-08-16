@@ -139,14 +139,15 @@ export default function Settings({ onSettingsUpdated }) {
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Header */}
-      <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: '#ffffff' }}>
+      <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div
           style={{
             width: '42px',
             height: '42px',
             borderRadius: '10px',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
+            backgroundColor: 'rgba(124, 92, 252, 0.15)',
+            color: 'var(--highlight)',
+            border: '1px solid rgba(124, 92, 252, 0.3)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -155,7 +156,7 @@ export default function Settings({ onSettingsUpdated }) {
           <SettingsIcon size={22} />
         </div>
         <div>
-          <h2 style={{ fontSize: '1.375rem', fontWeight: '800' }}>System & Routine Settings</h2>
+          <h2 style={{ fontSize: '1.375rem', fontWeight: '800', color: 'var(--text-main)' }}>System & Routine Settings</h2>
           <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
             Configure tracking start date, cook profile, shift names, custom leave reasons, and security passcode.
           </span>
@@ -164,16 +165,16 @@ export default function Settings({ onSettingsUpdated }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem' }}>
         {/* General Tracker Settings Form */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', backgroundColor: '#ffffff' }}>
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-            <User size={18} color="var(--primary)" />
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Cook & Routine Rules</h3>
+            <User size={18} color="var(--highlight)" />
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>Cook & Routine Rules</h3>
           </div>
 
           <form onSubmit={handleSaveGeneralSettings} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {/* Cook Name */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                 Cook Name / Display Title
               </label>
               <input
@@ -186,6 +187,8 @@ export default function Settings({ onSettingsUpdated }) {
                   padding: '0.5rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-main)',
                   fontSize: '0.875rem'
                 }}
               />
@@ -193,7 +196,7 @@ export default function Settings({ onSettingsUpdated }) {
 
             {/* Tracking Start Date */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                 Tracking Start Date
               </label>
               <input
@@ -206,6 +209,8 @@ export default function Settings({ onSettingsUpdated }) {
                   padding: '0.5rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-main)',
                   fontSize: '0.875rem'
                 }}
               />
@@ -217,7 +222,7 @@ export default function Settings({ onSettingsUpdated }) {
             {/* Shift Names */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                   Morning Shift Name
                 </label>
                 <input
@@ -229,14 +234,16 @@ export default function Settings({ onSettingsUpdated }) {
                     padding: '0.5rem 0.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-main)',
                     fontSize: '0.875rem'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
-                  Evening Shift Name
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
+                  Night Shift Name
                 </label>
                 <input
                   type="text"
@@ -247,6 +254,8 @@ export default function Settings({ onSettingsUpdated }) {
                     padding: '0.5rem 0.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-main)',
                     fontSize: '0.875rem'
                   }}
                 />
@@ -255,7 +264,7 @@ export default function Settings({ onSettingsUpdated }) {
 
             {/* Shifts Per Day (Fixed at 2) */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                 Shifts Per Day
               </label>
               <input
@@ -267,7 +276,7 @@ export default function Settings({ onSettingsUpdated }) {
                   padding: '0.5rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border)',
-                  backgroundColor: 'var(--bg-surface-subtle)',
+                  backgroundColor: 'var(--bg-surface-elevated)',
                   fontSize: '0.875rem',
                   color: 'var(--text-muted)'
                 }}
@@ -292,15 +301,15 @@ export default function Settings({ onSettingsUpdated }) {
 
         {/* Security / Change Passcode Card */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', backgroundColor: '#ffffff' }}>
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-              <Lock size={18} color="var(--primary)" />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Change Passcode</h3>
+              <Lock size={18} color="var(--highlight)" />
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>Change Passcode</h3>
             </div>
 
             <form onSubmit={handleChangePasscode} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                   Current Passcode
                 </label>
                 <input
@@ -315,6 +324,8 @@ export default function Settings({ onSettingsUpdated }) {
                     padding: '0.5rem 0.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-main)',
                     fontSize: '0.875rem'
                   }}
                 />
@@ -322,7 +333,7 @@ export default function Settings({ onSettingsUpdated }) {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                     New Passcode
                   </label>
                   <input
@@ -337,13 +348,15 @@ export default function Settings({ onSettingsUpdated }) {
                       padding: '0.5rem 0.75rem',
                       borderRadius: 'var(--radius-md)',
                       border: '1px solid var(--border)',
+                      backgroundColor: 'var(--bg-secondary)',
+                      color: 'var(--text-main)',
                       fontSize: '0.875rem'
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
                     Confirm Passcode
                   </label>
                   <input
@@ -358,6 +371,8 @@ export default function Settings({ onSettingsUpdated }) {
                       padding: '0.5rem 0.75rem',
                       borderRadius: 'var(--radius-md)',
                       border: '1px solid var(--border)',
+                      backgroundColor: 'var(--bg-secondary)',
+                      color: 'var(--text-main)',
                       fontSize: '0.875rem'
                     }}
                   />
@@ -370,17 +385,17 @@ export default function Settings({ onSettingsUpdated }) {
                 className="btn btn-secondary"
                 style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }}
               >
-                <KeyRound size={16} color="var(--primary)" />
+                <KeyRound size={16} color="var(--highlight)" />
                 <span>{changingPasscode ? 'Updating...' : 'Update Passcode'}</span>
               </button>
             </form>
           </div>
 
           {/* Custom Reasons Manager */}
-          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', backgroundColor: '#ffffff' }}>
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-              <Sparkles size={18} color="#f59e0b" />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Predefined Reasons for Absence</h3>
+              <Sparkles size={18} color="#F59E0B" />
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>Predefined Reasons for Absence</h3>
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -394,6 +409,8 @@ export default function Settings({ onSettingsUpdated }) {
                   padding: '0.45rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-main)',
                   fontSize: '0.8125rem'
                 }}
                 onKeyDown={(e) => {
@@ -422,10 +439,11 @@ export default function Settings({ onSettingsUpdated }) {
                     alignItems: 'center',
                     gap: '0.35rem',
                     padding: '0.3rem 0.65rem',
-                    backgroundColor: 'var(--bg-surface-subtle)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
                     borderRadius: 'var(--radius-full)',
                     fontSize: '0.75rem',
                     fontWeight: '600',
+                    color: 'var(--text-secondary)',
                     border: '1px solid var(--border)'
                   }}
                 >
@@ -434,7 +452,7 @@ export default function Settings({ onSettingsUpdated }) {
                     <button
                       type="button"
                       onClick={() => handleRemoveReason(reason)}
-                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#ef4444', padding: 0 }}
+                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#f87171', padding: 0 }}
                     >
                       <Trash2 size={12} />
                     </button>

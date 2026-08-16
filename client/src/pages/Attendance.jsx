@@ -108,25 +108,25 @@ export default function Attendance({ onNavigate }) {
         <>
           {/* DAY VIEW */}
           {viewMode === 'day' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
               {/* Morning */}
-              <div className="card" style={{ borderTop: '4px solid #f59e0b' }}>
+              <div className="card" style={{ borderTop: '3px solid #F59E0B' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>🌅 Morning Shift</h3>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>🌅 Morning Shift</h3>
                   <StatusBadge status={dayData.morning?.status || 'unrecorded'} />
                 </div>
                 {dayData.morning ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div>
                       <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>FOOD PREPARED:</span>
-                      <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: 'var(--primary)' }}>
+                      <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: 'var(--highlight)' }}>
                         {dayData.morning.foods?.map((f) => f.name || f).join(', ') || 'None recorded'}
                       </p>
                     </div>
                     {dayData.morning.reason && (
                       <div>
                         <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>REASON:</span>
-                        <p style={{ fontSize: '0.875rem', color: '#b91c1c', fontWeight: '600' }}>{dayData.morning.reason}</p>
+                        <p style={{ fontSize: '0.875rem', color: '#f87171', fontWeight: '600' }}>{dayData.morning.reason}</p>
                       </div>
                     )}
                     {dayData.morning.note && (
@@ -161,23 +161,23 @@ export default function Attendance({ onNavigate }) {
               </div>
 
               {/* Evening */}
-              <div className="card" style={{ borderTop: '4px solid #6366f1' }}>
+              <div className="card" style={{ borderTop: '3px solid #7C5CFC' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>🌙 Evening Shift</h3>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>🌙 Night Shift</h3>
                   <StatusBadge status={dayData.evening?.status || 'unrecorded'} />
                 </div>
                 {dayData.evening ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div>
                       <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>FOOD PREPARED:</span>
-                      <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: 'var(--primary)' }}>
+                      <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: 'var(--highlight)' }}>
                         {dayData.evening.foods?.map((f) => f.name || f).join(', ') || 'None recorded'}
                       </p>
                     </div>
                     {dayData.evening.reason && (
                       <div>
                         <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>REASON:</span>
-                        <p style={{ fontSize: '0.875rem', color: '#b91c1c', fontWeight: '600' }}>{dayData.evening.reason}</p>
+                        <p style={{ fontSize: '0.875rem', color: '#f87171', fontWeight: '600' }}>{dayData.evening.reason}</p>
                       </div>
                     )}
                     {dayData.evening.note && (
@@ -198,14 +198,14 @@ export default function Attendance({ onNavigate }) {
                 ) : (
                   <div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>
-                      No evening shift recorded for this date.
+                      No night shift recorded for this date.
                     </p>
                     <button
                       onClick={() => onNavigate('daily-entry')}
                       className="btn btn-primary btn-sm"
                     >
                       <Plus size={14} />
-                      <span>Record Evening Shift</span>
+                      <span>Record Night Shift</span>
                     </button>
                   </div>
                 )}
@@ -217,15 +217,15 @@ export default function Attendance({ onNavigate }) {
           {viewMode === 'week' && (
             <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
               <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)' }}>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>7-Day Weekly Attendance Grid</h3>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>7-Day Weekly Attendance Grid</h3>
               </div>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
-                    <tr style={{ backgroundColor: 'var(--bg-surface-subtle)', borderBottom: '1px solid var(--border)' }}>
+                    <tr style={{ backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)' }}>
                       <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>DATE / DAY</th>
                       <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>🌅 MORNING SHIFT</th>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>🌙 EVENING SHIFT</th>
+                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>🌙 NIGHT SHIFT</th>
                       <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>FOOD PREPARED</th>
                     </tr>
                   </thead>
@@ -240,9 +240,8 @@ export default function Attendance({ onNavigate }) {
                           key={day.dateString}
                           style={{ borderBottom: '1px solid var(--border)' }}
                         >
-                          <td style={{ padding: '1rem 1.25rem' }}>
-                            <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{day.dayName}</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{formatDateShort(day.dateString)}</div>
+                          <td style={{ padding: '1rem 1.25rem', fontWeight: '700', color: 'var(--text-main)', fontSize: '0.875rem' }}>
+                            {formatDateShort(day.dateString)}
                           </td>
                           <td style={{ padding: '1rem 1.25rem' }}>
                             {day.morning ? (
@@ -268,7 +267,7 @@ export default function Attendance({ onNavigate }) {
                               <StatusBadge status="unrecorded" size="sm" />
                             )}
                           </td>
-                          <td style={{ padding: '1rem 1.25rem', fontSize: '0.8125rem', color: 'var(--primary)', fontWeight: '600' }}>
+                          <td style={{ padding: '1rem 1.25rem', fontSize: '0.8125rem', color: 'var(--highlight)', fontWeight: '600' }}>
                             {allFoods.length > 0
                               ? allFoods.map((f) => f.name || f).join(', ')
                               : <span style={{ color: 'var(--text-muted)', fontWeight: '400' }}>—</span>}
@@ -293,7 +292,7 @@ export default function Attendance({ onNavigate }) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   borderBottom: '1px solid var(--border)',
-                  backgroundColor: '#ffffff'
+                  backgroundColor: 'var(--bg-secondary)'
                 }}
               >
                 {/* Search Input */}
@@ -308,9 +307,10 @@ export default function Attendance({ onNavigate }) {
                       width: '100%',
                       padding: '0.5rem 0.75rem 0.5rem 2.25rem',
                       borderRadius: 'var(--radius-md)',
-                      border: '1.5px solid var(--border)',
+                      border: '1px solid var(--border)',
                       fontSize: '0.8125rem',
-                      backgroundColor: 'var(--bg-surface-subtle)',
+                      backgroundColor: 'var(--bg-surface-elevated)',
+                      color: 'var(--text-main)',
                       outline: 'none'
                     }}
                   />
@@ -332,9 +332,9 @@ export default function Attendance({ onNavigate }) {
                     style={{
                       padding: '0.35rem 0.75rem',
                       borderRadius: 'var(--radius-full)',
-                      border: `1.5px solid ${statusFilter === 'all' ? 'var(--primary)' : 'var(--border)'}`,
-                      backgroundColor: statusFilter === 'all' ? 'var(--primary-light)' : 'var(--bg-surface-subtle)',
-                      color: statusFilter === 'all' ? 'var(--primary)' : 'var(--text-muted)',
+                      border: `1px solid ${statusFilter === 'all' ? 'var(--primary)' : 'var(--border)'}`,
+                      backgroundColor: statusFilter === 'all' ? 'rgba(124, 92, 252, 0.18)' : 'var(--bg-surface-elevated)',
+                      color: statusFilter === 'all' ? 'var(--highlight)' : 'var(--text-secondary)',
                       fontSize: '0.8125rem',
                       fontWeight: statusFilter === 'all' ? '700' : '600',
                       cursor: 'pointer',
@@ -355,9 +355,9 @@ export default function Attendance({ onNavigate }) {
                         style={{
                           padding: '0.35rem 0.75rem',
                           borderRadius: 'var(--radius-full)',
-                          border: `1.5px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
-                          backgroundColor: isSelected ? opt.bgColor : 'var(--bg-surface-subtle)',
-                          color: isSelected ? opt.textColor : 'var(--text-muted)',
+                          border: `1px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
+                          backgroundColor: isSelected ? opt.bgColor : 'var(--bg-surface-elevated)',
+                          color: isSelected ? opt.textColor : 'var(--text-secondary)',
                           fontSize: '0.8125rem',
                           fontWeight: isSelected ? '700' : '600',
                           cursor: 'pointer',
@@ -388,7 +388,7 @@ export default function Attendance({ onNavigate }) {
                           padding: '0.875rem 1rem',
                           borderRadius: 'var(--radius-md)',
                           border: '1px solid var(--border)',
-                          backgroundColor: 'var(--bg-surface)',
+                          backgroundColor: 'var(--bg-surface-elevated)',
                           display: 'flex',
                           flexDirection: 'column',
                           gap: '0.5rem',
@@ -407,8 +407,9 @@ export default function Attendance({ onNavigate }) {
                                 fontWeight: '700',
                                 padding: '0.15rem 0.5rem',
                                 borderRadius: 'var(--radius-full)',
-                                backgroundColor: shift.shift === 'morning' ? '#fef3c7' : '#e0e7ff',
-                                color: shift.shift === 'morning' ? '#d97706' : '#4338ca'
+                                backgroundColor: shift.shift === 'morning' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(124, 92, 252, 0.15)',
+                                color: shift.shift === 'morning' ? '#F59E0B' : '#A78BFA',
+                                border: `1px solid ${shift.shift === 'morning' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(124, 92, 252, 0.3)'}`
                               }}
                             >
                               {shift.shift === 'morning' ? '🌅 Morning' : '🌙 Night'}
@@ -433,7 +434,7 @@ export default function Attendance({ onNavigate }) {
                         {shift.foods && shift.foods.length > 0 && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem' }}>
                             <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Food:</span>
-                            <span style={{ color: 'var(--primary)', fontWeight: '700' }}>
+                            <span style={{ color: 'var(--highlight)', fontWeight: '700' }}>
                               {shift.foods.map((f) => f.name || f).join(', ')}
                             </span>
                           </div>
@@ -441,9 +442,9 @@ export default function Attendance({ onNavigate }) {
 
                         {/* Reason & Note */}
                         {(shift.reason || shift.note) && (
-                          <div style={{ fontSize: '0.78125rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <div style={{ fontSize: '0.78125rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                             {shift.reason && (
-                              <span style={{ color: '#b91c1c', fontWeight: '700', backgroundColor: '#fef2f2', padding: '1px 6px', borderRadius: '4px' }}>
+                              <span style={{ color: '#f87171', fontWeight: '700', backgroundColor: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '1px 6px', borderRadius: '4px' }}>
                                 {shift.reason}
                               </span>
                             )}

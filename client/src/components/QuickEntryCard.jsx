@@ -91,17 +91,15 @@ export default function QuickEntryCard({
   };
 
   const statusBtns = [
-    { label: 'Present', value: 'present', activeBg: '#ecfdf5', activeBorder: '#10b981', color: '#047857' },
-    { label: 'Leave', value: 'leave', activeBg: '#fef2f2', activeBorder: '#ef4444', color: '#b91c1c' },
-    { label: 'Late', value: 'late', activeBg: '#f5f3ff', activeBorder: '#8b5cf6', color: '#6d28d9' }
+    { label: 'Present', value: 'present', activeBg: 'rgba(34, 197, 94, 0.15)', activeBorder: '#22C55E', color: '#4ade80' },
+    { label: 'Leave', value: 'leave', activeBg: 'rgba(239, 68, 68, 0.15)', activeBorder: '#EF4444', color: '#f87171' },
+    { label: 'Late', value: 'late', activeBg: 'rgba(124, 92, 252, 0.15)', activeBorder: '#7C5CFC', color: '#c4b5fd' }
   ];
 
   return (
     <div
       className="card"
       style={{
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        border: '1px solid var(--border)',
         position: 'relative'
       }}
     >
@@ -113,8 +111,9 @@ export default function QuickEntryCard({
               width: '36px',
               height: '36px',
               borderRadius: '10px',
-              backgroundColor: '#eef2ff',
-              color: 'var(--primary)',
+              backgroundColor: 'rgba(124, 92, 252, 0.15)',
+              color: 'var(--highlight)',
+              border: '1px solid rgba(124, 92, 252, 0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -149,7 +148,7 @@ export default function QuickEntryCard({
           style={{
             padding: '1rem',
             borderRadius: 'var(--radius-md)',
-            backgroundColor: '#ffffff',
+            backgroundColor: 'var(--bg-surface-elevated)',
             border: '1px solid var(--border)',
             display: 'flex',
             flexDirection: 'column',
@@ -158,8 +157,8 @@ export default function QuickEntryCard({
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Sun size={18} color="#d97706" />
-              <span style={{ fontWeight: '700', fontSize: '0.9375rem' }}>Morning Shift</span>
+              <Sun size={18} color="#F59E0B" />
+              <span style={{ fontWeight: '700', fontSize: '0.9375rem', color: 'var(--text-main)' }}>Morning Shift</span>
             </div>
             <StatusBadge status={morningStatus || morningShift?.status || 'unrecorded'} size="sm" />
           </div>
@@ -179,14 +178,13 @@ export default function QuickEntryCard({
                     flex: 1,
                     padding: '0.5rem 0.5rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: `1.5px solid ${isSelected ? btn.activeBorder : 'var(--border)'}`,
-                    backgroundColor: isSelected ? btn.activeBg : '#f8fafc',
-                    color: isSelected ? btn.color : 'var(--text-muted)',
+                    border: `1px solid ${isSelected ? btn.activeBorder : 'var(--border)'}`,
+                    backgroundColor: isSelected ? btn.activeBg : 'var(--bg-secondary)',
+                    color: isSelected ? btn.color : 'var(--text-secondary)',
                     fontWeight: isSelected ? '700' : '600',
                     fontSize: '0.8125rem',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
+                    transition: 'all 0.15s ease'
                   }}
                 >
                   {btn.label}
@@ -200,7 +198,7 @@ export default function QuickEntryCard({
             onClick={() => handleSaveMorningOnly(undefined)}
             disabled={saving}
             className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.78125rem', padding: '0.4rem 0.5rem', color: '#b45309', borderColor: '#fde68a' }}
+            style={{ fontSize: '0.78125rem', padding: '0.4rem 0.5rem', color: '#F59E0B', borderColor: 'rgba(245, 158, 11, 0.3)' }}
           >
             Save Morning Shift
           </button>
@@ -211,7 +209,7 @@ export default function QuickEntryCard({
           style={{
             padding: '1rem',
             borderRadius: 'var(--radius-md)',
-            backgroundColor: '#ffffff',
+            backgroundColor: 'var(--bg-surface-elevated)',
             border: '1px solid var(--border)',
             display: 'flex',
             flexDirection: 'column',
@@ -220,8 +218,8 @@ export default function QuickEntryCard({
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Moon size={18} color="#4338ca" />
-              <span style={{ fontWeight: '700', fontSize: '0.9375rem' }}>Night Shift</span>
+              <Moon size={18} color="#A78BFA" />
+              <span style={{ fontWeight: '700', fontSize: '0.9375rem', color: 'var(--text-main)' }}>Night Shift</span>
             </div>
             <StatusBadge status={eveningStatus || eveningShift?.status || 'unrecorded'} size="sm" />
           </div>
@@ -241,14 +239,13 @@ export default function QuickEntryCard({
                     flex: 1,
                     padding: '0.5rem 0.5rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: `1.5px solid ${isSelected ? btn.activeBorder : 'var(--border)'}`,
-                    backgroundColor: isSelected ? btn.activeBg : '#f8fafc',
-                    color: isSelected ? btn.color : 'var(--text-muted)',
+                    border: `1px solid ${isSelected ? btn.activeBorder : 'var(--border)'}`,
+                    backgroundColor: isSelected ? btn.activeBg : 'var(--bg-secondary)',
+                    color: isSelected ? btn.color : 'var(--text-secondary)',
                     fontWeight: isSelected ? '700' : '600',
                     fontSize: '0.8125rem',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
+                    transition: 'all 0.15s ease'
                   }}
                 >
                   {btn.label}
@@ -262,7 +259,7 @@ export default function QuickEntryCard({
             onClick={() => handleSaveNightOnly(undefined)}
             disabled={saving}
             className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.75rem', padding: '0.35rem 0.5rem', color: '#4338ca', borderColor: '#c7d2fe' }}
+            style={{ fontSize: '0.75rem', padding: '0.35rem 0.5rem', color: '#A78BFA', borderColor: 'rgba(124, 92, 252, 0.3)' }}
           >
             Save Night Shift
           </button>
@@ -288,8 +285,9 @@ export default function QuickEntryCard({
           style={{
             marginTop: '0.75rem',
             padding: '0.4rem 0.75rem',
-            backgroundColor: '#ecfdf5',
-            color: '#047857',
+            backgroundColor: 'rgba(34, 197, 94, 0.15)',
+            color: '#4ade80',
+            border: '1px solid rgba(34, 197, 94, 0.3)',
             borderRadius: 'var(--radius-sm)',
             fontSize: '0.75rem',
             fontWeight: '600',

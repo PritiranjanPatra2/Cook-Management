@@ -9,14 +9,14 @@ export default function AttendanceChart({
   attendancePercentage = 0
 }) {
   const data = [
-    { name: 'Present', value: present, color: '#10b981' },
-    { name: 'Leave', value: leave, color: '#ef4444' },
-    { name: 'Late', value: late, color: '#8b5cf6' },
-    { name: 'Not Recorded', value: notRecorded, color: '#cbd5e1' }
+    { name: 'Present', value: present, color: '#22C55E' },
+    { name: 'Leave', value: leave, color: '#EF4444' },
+    { name: 'Late', value: late, color: '#7C5CFC' },
+    { name: 'Not Recorded', value: notRecorded, color: 'rgba(255, 255, 255, 0.15)' }
   ].filter((item) => item.value > 0);
 
   // Fallback if no shifts at all
-  const chartData = data.length > 0 ? data : [{ name: 'No Data', value: 1, color: '#e2e8f0' }];
+  const chartData = data.length > 0 ? data : [{ name: 'No Data', value: 1, color: 'rgba(255, 255, 255, 0.1)' }];
 
   return (
     <div
@@ -33,7 +33,7 @@ export default function AttendanceChart({
         <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-main)' }}>
           Attendance Rate
         </h4>
-        <span style={{ fontSize: '0.8125rem', fontWeight: '700', color: '#10b981' }}>
+        <span style={{ fontSize: '0.8125rem', fontWeight: '700', color: '#22C55E' }}>
           {attendancePercentage}%
         </span>
       </div>
@@ -44,11 +44,13 @@ export default function AttendanceChart({
             <Tooltip
               formatter={(value, name) => [`${value} shifts`, name]}
               contentStyle={{
-                backgroundColor: '#ffffff',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
+                backgroundColor: '#171E2D',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                color: '#F8FAFC'
               }}
+              itemStyle={{ color: '#F8FAFC' }}
             />
             <Pie
               data={chartData}
@@ -58,7 +60,7 @@ export default function AttendanceChart({
               dataKey="value"
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
+                <Cell key={`cell-${index}`} fill={entry.color} stroke="#121824" strokeWidth={2} />
               ))}
             </Pie>
           </PieChart>

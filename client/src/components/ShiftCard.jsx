@@ -55,8 +55,8 @@ export default function ShiftCard({
         display: 'flex',
         flexDirection: 'column',
         gap: '1.25rem',
-        borderTop: isMorning ? '4px solid #f59e0b' : '4px solid #6366f1',
-        backgroundColor: '#ffffff'
+        borderTop: isMorning ? '3px solid #F59E0B' : '3px solid #7C5CFC',
+        position: 'relative'
       }}
     >
       {/* Shift Card Header */}
@@ -67,14 +67,15 @@ export default function ShiftCard({
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              backgroundColor: isMorning ? '#fef3c7' : '#e0e7ff',
-              color: isMorning ? '#d97706' : '#4338ca',
+              backgroundColor: isMorning ? 'rgba(245, 158, 11, 0.15)' : 'rgba(124, 92, 252, 0.15)',
+              color: isMorning ? '#F59E0B' : '#A78BFA',
+              border: `1px solid ${isMorning ? 'rgba(245, 158, 11, 0.3)' : 'rgba(124, 92, 252, 0.3)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            {isMorning ? <Sun size={22} /> : <Moon size={22} />}
+            {isMorning ? <Sun size={20} /> : <Moon size={20} />}
           </div>
           <div>
             <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>
@@ -93,10 +94,11 @@ export default function ShiftCard({
             disabled={isSavingSingle}
             className="btn btn-secondary btn-sm"
             style={{
-              borderColor: isMorning ? '#f59e0b' : '#6366f1',
-              color: isMorning ? '#d97706' : '#4338ca',
+              borderColor: isMorning ? 'rgba(245, 158, 11, 0.4)' : 'rgba(124, 92, 252, 0.4)',
+              color: isMorning ? '#F59E0B' : '#A78BFA',
               fontWeight: '700',
-              gap: '0.35rem'
+              gap: '0.35rem',
+              fontSize: '0.78125rem'
             }}
           >
             <span>{isSavingSingle ? 'Saving...' : `Save ${isMorning ? 'Morning' : 'Night'} Only`}</span>
@@ -106,7 +108,7 @@ export default function ShiftCard({
 
       {/* Status Selector Buttons */}
       <div>
-        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
           Status
         </label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -123,14 +125,13 @@ export default function ShiftCard({
                   gap: '0.4rem',
                   padding: '0.5rem 0.9rem',
                   borderRadius: 'var(--radius-md)',
-                  border: `1.5px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
-                  backgroundColor: isSelected ? opt.bgColor : '#ffffff',
-                  color: isSelected ? opt.textColor : 'var(--text-muted)',
+                  border: `1px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
+                  backgroundColor: isSelected ? opt.bgColor : 'var(--bg-surface-elevated)',
+                  color: isSelected ? opt.textColor : 'var(--text-secondary)',
                   fontWeight: isSelected ? '700' : '500',
                   fontSize: '0.875rem',
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
+                  transition: 'all 0.15s ease'
                 }}
               >
                 <span
@@ -178,7 +179,7 @@ export default function ShiftCard({
       {/* Reason for Absence */}
       {showReasonSection && (
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
             <AlertTriangle size={15} color="#ef4444" />
             <span>Reason for Absence</span>
           </label>
@@ -198,7 +199,7 @@ export default function ShiftCard({
                 padding: '0.5rem 0.75rem',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border)',
-                backgroundColor: 'var(--bg-surface-subtle)',
+                backgroundColor: 'var(--bg-secondary)',
                 fontSize: '0.875rem',
                 color: 'var(--text-main)'
               }}
@@ -224,7 +225,8 @@ export default function ShiftCard({
                   padding: '0.5rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border)',
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-main)',
                   fontSize: '0.875rem'
                 }}
               />
@@ -235,7 +237,7 @@ export default function ShiftCard({
 
       {/* Optional Note */}
       <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
           <FileText size={15} color="var(--text-muted)" />
           <span>Note (Optional)</span>
         </label>
@@ -249,7 +251,7 @@ export default function ShiftCard({
             padding: '0.5rem 0.75rem',
             borderRadius: 'var(--radius-md)',
             border: '1px solid var(--border)',
-            backgroundColor: 'var(--bg-surface-subtle)',
+            backgroundColor: 'var(--bg-secondary)',
             fontSize: '0.875rem',
             color: 'var(--text-main)'
           }}

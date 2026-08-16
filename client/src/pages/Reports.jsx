@@ -117,8 +117,7 @@ export default function Reports({ cookName = 'Cook' }) {
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem',
-          backgroundColor: '#ffffff'
+          gap: '1rem'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -127,8 +126,9 @@ export default function Reports({ cookName = 'Cook' }) {
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)',
+              backgroundColor: 'rgba(124, 92, 252, 0.15)',
+              color: 'var(--highlight)',
+              border: '1px solid rgba(124, 92, 252, 0.3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -152,6 +152,8 @@ export default function Reports({ cookName = 'Cook' }) {
                   padding: '0.35rem 0.65rem',
                   borderRadius: 'var(--radius-sm)',
                   border: '1px solid var(--border)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-main)',
                   fontWeight: '700',
                   fontSize: '1rem'
                 }}
@@ -193,7 +195,8 @@ export default function Reports({ cookName = 'Cook' }) {
       <div
         className="card"
         style={{
-          background: 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)',
+          background: 'linear-gradient(135deg, #171E2D 0%, #121824 100%)',
+          border: '1px solid rgba(124, 92, 252, 0.3)',
           color: '#ffffff',
           display: 'flex',
           flexWrap: 'wrap',
@@ -204,25 +207,25 @@ export default function Reports({ cookName = 'Cook' }) {
         }}
       >
         <div>
-          <span style={{ fontSize: '0.8125rem', color: '#c7d2fe', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: '0.8125rem', color: 'var(--highlight)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Executive Monthly Summary
           </span>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#ffffff', marginTop: '0.25rem' }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--text-main)', marginTop: '0.25rem' }}>
             {monthName} {year}
           </h2>
-          <p style={{ fontSize: '0.875rem', color: '#e0e7ff', marginTop: '0.35rem' }}>
-            Tracking Period: <b>{report?.startDay} {monthName} – {report?.endDay} {monthName}</b> ({report?.countedDays} days)
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
+            Tracking Period: <b style={{ color: 'var(--text-main)' }}>{report?.startDay} {monthName} – {report?.endDay} {monthName}</b> ({report?.countedDays} days)
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <div style={{ textAlign: 'center', padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '12px' }}>
-            <span style={{ fontSize: '0.75rem', color: '#c7d2fe', fontWeight: '600' }}>Expected Shifts</span>
-            <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#ffffff' }}>{report?.expectedShifts}</div>
+          <div style={{ textAlign: 'center', padding: '0.6rem 1.2rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--border)', borderRadius: '12px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>Expected Shifts</span>
+            <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)' }}>{report?.expectedShifts}</div>
           </div>
-          <div style={{ textAlign: 'center', padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '12px' }}>
-            <span style={{ fontSize: '0.75rem', color: '#a7f3d0', fontWeight: '600' }}>Attendance</span>
-            <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#6ee7b7' }}>{report?.attendancePercentage}%</div>
+          <div style={{ textAlign: 'center', padding: '0.6rem 1.2rem', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '12px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: '600' }}>Attendance</span>
+            <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#22C55E' }}>{report?.attendancePercentage}%</div>
           </div>
         </div>
       </div>
@@ -234,7 +237,7 @@ export default function Reports({ cookName = 'Cook' }) {
           value={report?.countedDays || 0}
           subValue={`${report?.totalMonthDays || 0} days in month`}
           icon={Calendar}
-          accentColor="#6366f1"
+          accentColor="#7C5CFC"
         />
 
         <StatCard
@@ -242,7 +245,7 @@ export default function Reports({ cookName = 'Cook' }) {
           value={report?.presentCount || 0}
           subValue={`${report?.presentDayEquivalent || 0} day equivalent`}
           icon={CheckCircle2}
-          accentColor="#10b981"
+          accentColor="#22C55E"
         />
 
         <StatCard
@@ -250,7 +253,7 @@ export default function Reports({ cookName = 'Cook' }) {
           value={report?.leaveCount || 0}
           subValue={`${report?.leaveDayEquivalent || 0} day equivalent`}
           icon={XCircle}
-          accentColor="#ef4444"
+          accentColor="#EF4444"
         />
 
         <StatCard
@@ -258,7 +261,7 @@ export default function Reports({ cookName = 'Cook' }) {
           value={report?.lateCount || 0}
           subValue="Tracked with attendance"
           icon={Clock}
-          accentColor="#8b5cf6"
+          accentColor="#A78BFA"
         />
       </div>
 
@@ -267,13 +270,13 @@ export default function Reports({ cookName = 'Cook' }) {
         {/* Leave Reasons Analysis */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-            <XCircle size={18} color="#ef4444" />
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Leave Analysis</h3>
+            <XCircle size={18} color="#EF4444" />
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>Leave Analysis</h3>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.75rem', backgroundColor: '#fef2f2', borderRadius: 'var(--radius-sm)', border: '1px solid #fecaca' }}>
-            <span style={{ fontWeight: '700', color: '#b91c1c', fontSize: '0.875rem' }}>Total Leave Shifts</span>
-            <span style={{ fontWeight: '800', color: '#b91c1c', fontSize: '0.875rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.75rem', backgroundColor: 'rgba(239, 68, 68, 0.12)', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(239, 68, 68, 0.25)' }}>
+            <span style={{ fontWeight: '700', color: '#f87171', fontSize: '0.875rem' }}>Total Leave Shifts</span>
+            <span style={{ fontWeight: '800', color: '#f87171', fontSize: '0.875rem' }}>
               {report?.leaveCount} shifts ({report?.leaveDayEquivalent} days)
             </span>
           </div>
@@ -291,12 +294,13 @@ export default function Reports({ cookName = 'Cook' }) {
                     justifyContent: 'space-between',
                     padding: '0.5rem 0.75rem',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'var(--bg-surface-subtle)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    border: '1px solid var(--border)',
                     fontSize: '0.8125rem'
                   }}
                 >
-                  <span style={{ fontWeight: '600' }}>{reason}</span>
-                  <span style={{ fontWeight: '700', color: '#ef4444' }}>{count} shift{count > 1 ? 's' : ''}</span>
+                  <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>{reason}</span>
+                  <span style={{ fontWeight: '700', color: '#f87171' }}>{count} shift{count > 1 ? 's' : ''}</span>
                 </div>
               ))}
             </div>
@@ -316,8 +320,8 @@ export default function Reports({ cookName = 'Cook' }) {
       {/* Top Prepared Dishes Section */}
       <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-          <Award size={18} color="var(--primary)" />
-          <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Dishes Prepared This Month</h3>
+          <Award size={18} color="var(--highlight)" />
+          <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>Dishes Prepared This Month</h3>
         </div>
 
         {(report?.foodRanking || []).length === 0 ? (
@@ -330,18 +334,18 @@ export default function Reports({ cookName = 'Cook' }) {
                 style={{
                   padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: index === 0 ? '#eef2ff' : 'var(--bg-surface-subtle)',
-                  border: `1px solid ${index === 0 ? 'var(--border-focus)' : 'var(--border)'}`,
+                  backgroundColor: index === 0 ? 'rgba(124, 92, 252, 0.15)' : 'var(--bg-surface-elevated)',
+                  border: `1px solid ${index === 0 ? 'rgba(124, 92, 252, 0.4)' : 'var(--border)'}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--primary)' }}>#{index + 1}</span>
-                  <span style={{ fontWeight: '700', fontSize: '0.875rem' }}>{dish.name}</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: '800', color: index === 0 ? 'var(--highlight)' : 'var(--text-muted)' }}>#{index + 1}</span>
+                  <span style={{ fontWeight: '700', fontSize: '0.875rem', color: 'var(--text-main)' }}>{dish.name}</span>
                 </div>
-                <span style={{ fontWeight: '800', color: 'var(--primary)', fontSize: '0.875rem' }}>
+                <span style={{ fontWeight: '800', color: 'var(--highlight)', fontSize: '0.875rem' }}>
                   {dish.count}
                 </span>
               </div>

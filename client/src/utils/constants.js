@@ -2,37 +2,37 @@ export const STATUS_OPTIONS = [
   {
     value: 'present',
     label: 'Present',
-    dotColor: '#10b981',
-    bgColor: '#ecfdf5',
-    textColor: '#047857',
-    borderColor: '#a7f3d0',
+    dotColor: '#22C55E',
+    bgColor: 'rgba(34, 197, 94, 0.12)',
+    textColor: '#4ade80',
+    borderColor: 'rgba(34, 197, 94, 0.25)',
     icon: 'CheckCircle2'
   },
   {
     value: 'leave',
     label: 'Leave',
-    dotColor: '#ef4444',
-    bgColor: '#fef2f2',
-    textColor: '#b91c1c',
-    borderColor: '#fecaca',
+    dotColor: '#EF4444',
+    bgColor: 'rgba(239, 68, 68, 0.12)',
+    textColor: '#f87171',
+    borderColor: 'rgba(239, 68, 68, 0.25)',
     icon: 'XCircle'
   },
   {
     value: 'late',
     label: 'Late',
-    dotColor: '#8b5cf6',
-    bgColor: '#f5f3ff',
-    textColor: '#6d28d9',
-    borderColor: '#ddd6fe',
+    dotColor: '#A78BFA',
+    bgColor: 'rgba(124, 92, 252, 0.12)',
+    textColor: '#c4b5fd',
+    borderColor: 'rgba(124, 92, 252, 0.25)',
     icon: 'Clock'
   },
   {
     value: 'other',
     label: 'Other',
     dotColor: '#94a3b8',
-    bgColor: '#f8fafc',
-    textColor: '#64748b',
-    borderColor: '#cbd5e1',
+    bgColor: 'rgba(148, 163, 184, 0.12)',
+    textColor: '#cbd5e1',
+    borderColor: 'rgba(148, 163, 184, 0.25)',
     icon: 'HelpCircle'
   }
 ];

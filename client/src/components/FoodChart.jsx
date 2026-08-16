@@ -37,16 +37,16 @@ export default function FoodChart({ data = [], height = 300 }) {
   }));
 
   const colors = [
-    '#4f46e5',
-    '#6366f1',
-    '#818cf8',
-    '#a5b4fc',
-    '#c7d2fe',
-    '#e0e7ff',
-    '#38bdf8',
-    '#0ea5e9',
-    '#0284c7',
-    '#0369a1'
+    '#7C5CFC',
+    '#6366F1',
+    '#22D3EE',
+    '#A78BFA',
+    '#38BDF8',
+    '#818CF8',
+    '#06B6D4',
+    '#C084FC',
+    '#2DD4BF',
+    '#93C5FD'
   ];
 
   return (
@@ -56,25 +56,27 @@ export default function FoodChart({ data = [], height = 300 }) {
           data={chartData}
           margin={{ top: 10, right: 20, left: -10, bottom: 25 }}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.06)" />
           <XAxis
             dataKey="name"
-            stroke="#64748b"
+            stroke="#A8B1C2"
             fontSize={12}
             tickLine={false}
             interval={0}
             angle={-20}
             textAnchor="end"
           />
-          <YAxis stroke="#64748b" fontSize={12} tickLine={false} allowDecimals={false} />
+          <YAxis stroke="#A8B1C2" fontSize={12} tickLine={false} allowDecimals={false} />
           <Tooltip
             formatter={(value) => [`${value} times`, 'Prepared']}
             contentStyle={{
-              backgroundColor: '#ffffff',
-              borderRadius: '8px',
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
+              backgroundColor: '#171E2D',
+              borderRadius: '10px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+              color: '#F8FAFC'
             }}
+            itemStyle={{ color: '#F8FAFC' }}
           />
           <Bar dataKey="count" radius={[6, 6, 0, 0]}>
             {chartData.map((entry, index) => (

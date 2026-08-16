@@ -83,8 +83,8 @@ export default function FoodAnalysis() {
             <div
               className="card"
               style={{
-                background: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%)',
-                border: '1px solid #fde68a',
+                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem'
@@ -95,8 +95,9 @@ export default function FoodAnalysis() {
                   width: '52px',
                   height: '52px',
                   borderRadius: '16px',
-                  backgroundColor: '#f59e0b',
-                  color: '#ffffff',
+                  backgroundColor: 'rgba(245, 158, 11, 0.25)',
+                  color: '#F59E0B',
+                  border: '1px solid rgba(245, 158, 11, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -106,13 +107,13 @@ export default function FoodAnalysis() {
                 <Award size={28} />
               </div>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#b45309', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#F59E0B', textTransform: 'uppercase' }}>
                   🥇 Most Prepared Dish
                 </span>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#78350f', marginTop: '0.15rem' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', marginTop: '0.15rem' }}>
                   {analysisData?.mostPrepared?.name || '—'}
                 </h3>
-                <p style={{ fontSize: '0.8125rem', color: '#92400e', fontWeight: '600' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: '600' }}>
                   {analysisData?.mostPrepared ? `${analysisData.mostPrepared.count} times prepared` : 'No meals recorded'}
                 </p>
               </div>
@@ -122,8 +123,8 @@ export default function FoodAnalysis() {
             <div
               className="card"
               style={{
-                background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-                border: '1px solid #cbd5e1',
+                background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, rgba(124, 92, 252, 0.05) 100%)',
+                border: '1px solid rgba(167, 139, 250, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem'
@@ -134,8 +135,9 @@ export default function FoodAnalysis() {
                   width: '52px',
                   height: '52px',
                   borderRadius: '16px',
-                  backgroundColor: '#64748b',
-                  color: '#ffffff',
+                  backgroundColor: 'rgba(124, 92, 252, 0.2)',
+                  color: 'var(--highlight)',
+                  border: '1px solid rgba(124, 92, 252, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -145,13 +147,13 @@ export default function FoodAnalysis() {
                 <Utensils size={26} />
               </div>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--highlight)', textTransform: 'uppercase' }}>
                   🥈 2nd Most Prepared Dish
                 </span>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#1e293b', marginTop: '0.15rem' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', marginTop: '0.15rem' }}>
                   {analysisData?.secondMostPrepared?.name || '—'}
                 </h3>
-                <p style={{ fontSize: '0.8125rem', color: '#475569', fontWeight: '600' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: '600' }}>
                   {analysisData?.secondMostPrepared ? `${analysisData.secondMostPrepared.count} times prepared` : '—'}
                 </p>
               </div>
@@ -161,8 +163,8 @@ export default function FoodAnalysis() {
             <div
               className="card"
               style={{
-                background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)',
-                border: '1px solid #c7d2fe',
+                background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(34, 211, 238, 0.05) 100%)',
+                border: '1px solid rgba(34, 211, 238, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem'
@@ -173,8 +175,9 @@ export default function FoodAnalysis() {
                   width: '52px',
                   height: '52px',
                   borderRadius: '16px',
-                  backgroundColor: 'var(--primary)',
-                  color: '#ffffff',
+                  backgroundColor: 'rgba(34, 211, 238, 0.2)',
+                  color: 'var(--secondary-accent)',
+                  border: '1px solid rgba(34, 211, 238, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -184,13 +187,13 @@ export default function FoodAnalysis() {
                 <BarChart3 size={26} />
               </div>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#4338ca', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--secondary-accent)', textTransform: 'uppercase' }}>
                   Total Cooking Sessions
                 </span>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#312e81', marginTop: '0.15rem' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', marginTop: '0.15rem' }}>
                   {analysisData?.totalMealsPrepared || 0}
                 </h3>
-                <p style={{ fontSize: '0.8125rem', color: '#4338ca', fontWeight: '600' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: '600' }}>
                   {analysisData?.data?.length || 0} unique recipes
                 </p>
               </div>
@@ -200,7 +203,7 @@ export default function FoodAnalysis() {
           {/* Bar Chart Section */}
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>
                 Dishes Prepared Frequency Chart
               </h3>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Top 10 Dishes</span>
@@ -212,17 +215,17 @@ export default function FoodAnalysis() {
           {/* Detailed Frequency & Shift Breakdown Table */}
           <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
             <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Full Food Frequency Breakdown</h3>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>Full Food Frequency Breakdown</h3>
             </div>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ backgroundColor: 'var(--bg-surface-subtle)', borderBottom: '1px solid var(--border)' }}>
+                  <tr style={{ backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)' }}>
                     <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}># RANK</th>
                     <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>DISH NAME</th>
                     <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>CATEGORY</th>
                     <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>🌅 MORNING</th>
-                    <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>🌙 EVENING</th>
+                    <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>🌙 NIGHT</th>
                     <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)', textAlign: 'right' }}>TOTAL TIMES</th>
                   </tr>
                 </thead>
@@ -236,24 +239,24 @@ export default function FoodAnalysis() {
                   ) : (
                     analysisData.data.map((dish, idx) => (
                       <tr key={dish.name} style={{ borderBottom: '1px solid var(--border)' }}>
-                        <td style={{ padding: '0.875rem 1.25rem', fontWeight: '800', color: 'var(--primary)' }}>
+                        <td style={{ padding: '0.875rem 1.25rem', fontWeight: '800', color: 'var(--highlight)' }}>
                           #{idx + 1}
                         </td>
-                        <td style={{ padding: '0.875rem 1.25rem', fontWeight: '700' }}>
+                        <td style={{ padding: '0.875rem 1.25rem', fontWeight: '700', color: 'var(--text-main)' }}>
                           {dish.name}
                         </td>
                         <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem' }}>
-                          <span style={{ padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-full)', backgroundColor: 'var(--bg-surface-subtle)', border: '1px solid var(--border)' }}>
+                          <span style={{ padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-full)', backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                             {dish.category}
                           </span>
                         </td>
-                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', color: '#d97706', fontWeight: '600' }}>
+                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', color: '#F59E0B', fontWeight: '600' }}>
                           {dish.morningCount || 0}
                         </td>
-                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', color: '#4338ca', fontWeight: '600' }}>
+                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', color: 'var(--highlight)', fontWeight: '600' }}>
                           {dish.eveningCount || 0}
                         </td>
-                        <td style={{ padding: '0.875rem 1.25rem', textAlign: 'right', fontWeight: '800', color: 'var(--primary)', fontSize: '1rem' }}>
+                        <td style={{ padding: '0.875rem 1.25rem', textAlign: 'right', fontWeight: '800', color: 'var(--highlight)', fontSize: '1rem' }}>
                           {dish.count}
                         </td>
                       </tr>
