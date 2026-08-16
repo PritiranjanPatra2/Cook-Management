@@ -6,6 +6,11 @@ export const dishService = {
     return request(`/dishes${query ? `?${query}` : ''}`);
   },
 
+  getComboSuggestion: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return request(`/dishes/suggest-combo${query ? `?${query}` : ''}`);
+  },
+
   createDish: (dishData) =>
     request('/dishes', {
       method: 'POST',

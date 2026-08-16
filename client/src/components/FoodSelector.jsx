@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, Check, Utensils, X, Tag } from 'lucide-react';
+import { Search, Plus, Check, Utensils, X, Tag, Sparkles, Dices, Clock } from 'lucide-react';
 import { dishService } from '../services/dishService';
 
 const PORTION_PRESETS = [
@@ -127,20 +127,42 @@ export default function FoodSelector({
   // Selected dishes objects for quantity selector
   const selectedDishesList = dishes.filter(d => normalizedSelectedIds.includes(normalizeId(d._id)));
 
+  const [isRolling, setIsRolling] = useState(false);
+
+  const handleRollCombo = async () => {
+    try {
+      setIsRolling(true);
+      const res = await dishService.getComboSuggestion();
+      if (res.success && res.data?.comboList?.length > 0) {
+        const comboIds = res.data.comboList.map(d => normalizeId(d._id));
+        const comboDetails = res.data.comboList.map(d => {
+          const isRoti = d.category === 'Bread' || /roti|chapati|paratha/i.test(d.name);
+          return { dish: normalizeId(d._id), quantity: isRoti ? '8-10 Rotis' : 'For 3-4' };
+        });
+        if (onChange) onChange(comboIds, comboDetails);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsRolling(false);
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
       {/* Search and Add Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
         <div
           style={{
             position: 'relative',
             flex: 1,
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            minWidth: '160px'
           }}
         >
           <Search
-            size={16}
+            size={15}
             style={{
               position: 'absolute',
               left: '0.75rem',
@@ -183,12 +205,30 @@ export default function FoodSelector({
 
         <button
           type="button"
+          onClick={handleRollCombo}
+          disabled={isRolling}
+          className="btn btn-secondary btn-sm"
+          style={{
+            whiteSpace: 'nowrap',
+            gap: '0.35rem',
+            borderColor: 'rgba(124, 92, 252, 0.4)',
+            color: 'var(--highlight)',
+            background: 'rgba(124, 92, 252, 0.12)'
+          }}
+          title="Auto-suggest a balanced combo based on past meals"
+        >
+          <Dices size={14} className={isRolling ? 'spin' : ''} />
+          <span>{isRolling ? 'Rolling...' : '🎲 Suggest Combo'}</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setShowAddModal(true)}
           className="btn btn-secondary btn-sm"
           style={{ whiteSpace: 'nowrap', gap: '0.3rem', flexShrink: 0 }}
         >
           <Plus size={15} color="var(--highlight)" />
-          <span>Add New Dish</span>
+          <span>Add Dish</span>
         </button>
       </div>
 
@@ -198,24 +238,26 @@ export default function FoodSelector({
           display: 'flex',
           flexWrap: 'wrap',
           gap: '0.45rem',
-          maxHeight: '170px',
+          maxHeight: '180px',
           overflowY: 'auto',
           padding: '0.25rem 0'
         }}
       >
         {filteredDishes.length === 0 ? (
           <div style={{ padding: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-            No dishes matching "{searchTerm}". Click <b>Add New Dish</b> to create it!
+            No dishes matching "{searchTerm}". Click <b>Add Dish</b> to create it!
           </div>
         ) : (
           filteredDishes.map((dish) => {
             const isSelected = selectedDishIds.includes(dish._id);
+            const daysAgo = dish.lastCookedDaysAgo;
             return (
               <button
                 key={dish._id}
                 type="button"
                 onClick={() => toggleDish(dish._id)}
                 className={`dish-chip ${isSelected ? 'selected' : ''}`}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
               >
                 <span
                   style={{
@@ -235,6 +277,28 @@ export default function FoodSelector({
                   {isSelected && <Check size={11} strokeWidth={3.5} />}
                 </span>
                 <span>{dish.name}</span>
+                {daysAgo !== undefined && daysAgo !== null && (
+                  <span
+                    style={{
+                      fontSize: '0.625rem',
+                      padding: '1px 5px',
+                      borderRadius: 'var(--radius-full)',
+                      backgroundColor: daysAgo === 0
+                        ? 'rgba(16, 185, 129, 0.25)'
+                        : daysAgo === 1
+                        ? 'rgba(245, 158, 11, 0.25)'
+                        : 'rgba(255, 255, 255, 0.08)',
+                      color: daysAgo === 0
+                        ? '#10B981'
+                        : daysAgo === 1
+                        ? '#F59E0B'
+                        : 'var(--text-muted)',
+                      fontWeight: 700
+                    }}
+                  >
+                    {daysAgo === 0 ? 'Today' : daysAgo === 1 ? '1d ago' : `${daysAgo}d ago`}
+                  </span>
+                )}
               </button>
             );
           })

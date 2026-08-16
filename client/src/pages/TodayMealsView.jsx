@@ -22,13 +22,15 @@ import { toYYYYMMDD, formatDate } from '../utils/dateUtils';
 import StatusBadge from '../components/StatusBadge';
 import EditShiftModal from '../components/EditShiftModal';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { Wallet } from 'lucide-react';
+import { Wallet, Dices, RotateCcw } from 'lucide-react';
 
 export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
   const [loading, setLoading] = useState(true);
   const [todayShifts, setTodayShifts] = useState({ morning: null, evening: null });
   const [dishes, setDishes] = useState([]);
   const [salaryDueInfo, setSalaryDueInfo] = useState(null);
+  const [suggestedCombo, setSuggestedCombo] = useState(null);
+  const [isRollingCombo, setIsRollingCombo] = useState(false);
   const [selectedShiftForEdit, setSelectedShiftForEdit] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -37,6 +39,20 @@ export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
   // Before 3 PM is morning routine, from 3 PM onwards is night/dinner routine
   const isMorningTime = currentHour < 15;
   const todayStr = toYYYYMMDD(today);
+
+  const loadCombo = async () => {
+    try {
+      setIsRollingCombo(true);
+      const res = await dishService.getComboSuggestion({ shift: isMorningTime ? 'morning' : 'evening' });
+      if (res.success && res.data) {
+        setSuggestedCombo(res.data);
+      }
+    } catch (err) {
+      console.error('Error fetching combo:', err);
+    } finally {
+      setIsRollingCombo(false);
+    }
+  };
 
   const fetchTodayData = async () => {
     try {
@@ -64,6 +80,9 @@ export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
           setSalaryDueInfo(null);
         }
       }
+
+      // Load initial combo suggestion
+      loadCombo();
     } catch (err) {
       console.error('Error fetching today meal data:', err);
     } finally {
@@ -580,6 +599,126 @@ export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
           </div>
         )}
       </div>
+
+      {/* ── 🎲 Smart Meal Combo Generator Card ── */}
+      {suggestedCombo && (
+        <div
+          className="card"
+          style={{
+            background: 'linear-gradient(135deg, rgba(124, 92, 252, 0.12) 0%, rgba(34, 211, 238, 0.08) 100%)',
+            border: '1px solid rgba(124, 92, 252, 0.3)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.875rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(124, 92, 252, 0.2)',
+                  color: 'var(--highlight)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.1rem'
+                }}
+              >
+                🎲
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                  What Should Cook Make Next?
+                </h4>
+                <span style={{ fontSize: '0.71875rem', color: 'var(--text-muted)' }}>
+                  Smart combo based on what hasn't been cooked recently
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={loadCombo}
+              disabled={isRollingCombo}
+              className="btn btn-secondary btn-sm"
+              style={{ gap: '0.35rem', borderColor: 'rgba(124, 92, 252, 0.4)', color: 'var(--highlight)' }}
+            >
+              <Dices size={14} className={isRollingCombo ? 'spin' : ''} />
+              <span>{isRollingCombo ? 'Rolling...' : 'Roll Another Combo'}</span>
+            </button>
+          </div>
+
+          {/* Combo Items Pill Row */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
+            {suggestedCombo.comboList?.map((item, idx) => {
+              const daysAgo = item.daysAgo;
+              return (
+                <div
+                  key={item._id || idx}
+                  style={{
+                    padding: '0.5rem 0.85rem',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem'
+                  }}
+                >
+                  <span style={{ fontSize: '1rem' }}>
+                    {/roti|chapati|paratha/i.test(item.name) ? '🫓' : /rice|pulao/i.test(item.name) ? '🍚' : /dal/i.test(item.name) ? '🍲' : '🥗'}
+                  </span>
+                  <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                    {item.name}
+                  </span>
+                  {daysAgo !== undefined && daysAgo !== null && (
+                    <span
+                      style={{
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        padding: '1px 6px',
+                        borderRadius: 'var(--radius-full)',
+                        backgroundColor: daysAgo === 999
+                          ? 'rgba(34, 211, 238, 0.15)'
+                          : daysAgo > 4
+                          ? 'rgba(245, 158, 11, 0.15)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                        color: daysAgo === 999
+                          ? 'var(--secondary-accent)'
+                          : daysAgo > 4
+                          ? '#F59E0B'
+                          : 'var(--text-muted)'
+                      }}
+                    >
+                      {daysAgo === 999 ? 'Never cooked' : `${daysAgo}d ago`}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Rationale & Quick Action */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '0.65rem' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+              💡 {suggestedCombo.reason}
+            </span>
+
+            <button
+              onClick={() => onNavigate('daily-entry')}
+              className="btn btn-primary btn-sm"
+              style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem' }}
+            >
+              <span>Apply to Daily Entry</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Edit Shift Modal */}
       <EditShiftModal

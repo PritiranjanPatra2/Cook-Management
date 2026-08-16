@@ -220,7 +220,7 @@ export default function FoodMeals() {
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-main)' }}>
                       {dish.name}
                     </h4>
@@ -230,9 +230,47 @@ export default function FoodMeals() {
                       </span>
                     )}
                   </div>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'inline-block', marginTop: '2px' }}>
-                    Category: <b style={{ color: 'var(--text-secondary)' }}>{dish.category || 'Other'}</b>
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      Category: <b style={{ color: 'var(--text-secondary)' }}>{dish.category || 'Other'}</b>
+                    </span>
+                    <span style={{ fontSize: '0.71875rem', color: 'var(--text-muted)' }}>•</span>
+                    <span
+                      style={{
+                        fontSize: '0.71875rem',
+                        padding: '1px 6px',
+                        borderRadius: 'var(--radius-full)',
+                        backgroundColor: dish.lastCookedDaysAgo === 0
+                          ? 'rgba(16, 185, 129, 0.15)'
+                          : dish.lastCookedDaysAgo === 1
+                          ? 'rgba(245, 158, 11, 0.15)'
+                          : dish.lastCookedDaysAgo !== null
+                          ? 'rgba(255, 255, 255, 0.08)'
+                          : 'rgba(34, 211, 238, 0.1)',
+                        color: dish.lastCookedDaysAgo === 0
+                          ? '#10B981'
+                          : dish.lastCookedDaysAgo === 1
+                          ? '#F59E0B'
+                          : dish.lastCookedDaysAgo !== null
+                          ? 'var(--text-secondary)'
+                          : 'var(--secondary-accent)',
+                        fontWeight: 600
+                      }}
+                    >
+                      {dish.lastCookedDaysAgo === 0
+                        ? '🕒 Cooked Today'
+                        : dish.lastCookedDaysAgo === 1
+                        ? '🕒 Cooked Yesterday'
+                        : dish.lastCookedDaysAgo !== null
+                        ? `🕒 ${dish.lastCookedDaysAgo}d ago`
+                        : '✨ Never Cooked'}
+                    </span>
+                    {dish.totalTimesCooked > 0 && (
+                      <span style={{ fontSize: '0.71875rem', color: 'var(--highlight)', fontWeight: 600 }}>
+                        ({dish.totalTimesCooked}x)
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
