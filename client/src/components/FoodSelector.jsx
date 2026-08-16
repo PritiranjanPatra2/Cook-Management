@@ -129,8 +129,8 @@ export default function FoodSelector({
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '0.5rem',
-          maxHeight: '180px',
+          gap: '0.45rem',
+          maxHeight: '190px',
           overflowY: 'auto',
           padding: '0.25rem 0'
         }}
@@ -154,16 +154,17 @@ export default function FoodSelector({
                     width: '16px',
                     height: '16px',
                     borderRadius: '4px',
-                    border: isSelected ? 'none' : '1.5px solid var(--border)',
+                    border: isSelected ? 'none' : '1.5px solid #94a3b8',
                     backgroundColor: isSelected ? 'var(--primary)' : '#ffffff',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#ffffff',
-                    fontSize: '10px'
+                    flexShrink: 0,
+                    transition: 'all 0.15s ease'
                   }}
                 >
-                  {isSelected && <Check size={12} strokeWidth={3} />}
+                  {isSelected && <Check size={11} strokeWidth={3.5} />}
                 </span>
                 <span>{dish.name}</span>
               </button>

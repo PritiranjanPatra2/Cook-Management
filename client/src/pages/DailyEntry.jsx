@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Sun, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Save, Sun, Moon, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import ShiftCard from '../components/ShiftCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { shiftService } from '../services/shiftService';
@@ -100,34 +100,121 @@ export default function DailyEntry() {
     else handleSaveNight();
   };
 
+  const isToday = selectedDate === toYYYYMMDD(new Date());
+
   return (
     <div className="fade-in">
       {/* Date Selector Card */}
       <div className="card" style={{ marginBottom: '0.875rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-          <button className="date-nav-btn" onClick={() => changeDay(-1)}>
-            <ChevronLeft size={14} /> Prev
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem' }}>
+          {/* Prev Button */}
+          <button
+            className="date-nav-btn"
+            onClick={() => changeDay(-1)}
+            style={{ padding: '0.4rem 0.65rem' }}
+            title="Previous Day"
+          >
+            <ChevronLeft size={15} />
+            <span>Prev</span>
           </button>
-          <div style={{ textAlign: 'center' }}>
+
+          {/* Center Date Pill */}
+          <div
+            style={{
+              position: 'relative',
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minWidth: 0
+            }}
+          >
             <input
               type="date"
               value={selectedDate}
               onChange={e => setSelectedDate(e.target.value)}
               style={{
-                border: 'none', background: 'transparent', textAlign: 'center',
-                fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700,
-                color: 'var(--text-main)', cursor: 'pointer', outline: 'none', width: '100%'
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0,
+                cursor: 'pointer',
+                zIndex: 2
               }}
             />
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '2px' }}>
-              {formatDate(selectedDate)}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.35rem',
+                padding: '0.38rem 0.65rem',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: isToday ? 'var(--primary-light)' : 'var(--bg-surface-subtle)',
+                border: `1.5px solid ${isToday ? '#c7d2fe' : 'var(--border)'}`,
+                cursor: 'pointer',
+                maxWidth: '100%',
+                color: isToday ? 'var(--primary)' : 'var(--text-main)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Calendar size={14} style={{ flexShrink: 0 }} />
+              <span
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '0.875rem',
+                  fontWeight: 700,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {formatDate(selectedDate)}
+              </span>
+              {isToday && (
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    fontWeight: 800,
+                    backgroundColor: 'var(--primary)',
+                    color: '#ffffff',
+                    padding: '1px 6px',
+                    borderRadius: 'var(--radius-full)',
+                    marginLeft: '2px',
+                    flexShrink: 0
+                  }}
+                >
+                  Today
+                </span>
+              )}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '0.35rem' }}>
-            <button className="date-nav-btn date-nav-today" onClick={() => setSelectedDate(toYYYYMMDD(new Date()))}>Today</button>
-            <button className="date-nav-btn" onClick={() => changeDay(1)}>Next <ChevronRight size={14} /></button>
-          </div>
+
+          {/* Next Button */}
+          <button
+            className="date-nav-btn"
+            onClick={() => changeDay(1)}
+            style={{ padding: '0.4rem 0.65rem' }}
+            title="Next Day"
+          >
+            <span>Next</span>
+            <ChevronRight size={15} />
+          </button>
         </div>
+
+        {/* Jump to Today quick link if not currently on today */}
+        {!isToday && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.45rem' }}>
+            <button
+              onClick={() => setSelectedDate(toYYYYMMDD(new Date()))}
+              className="date-nav-btn date-nav-today"
+              style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem' }}
+            >
+              Jump to Today
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Shift Tabs */}

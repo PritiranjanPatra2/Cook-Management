@@ -443,10 +443,11 @@ body {
 }
 
 .date-nav-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.45rem 0.875rem;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.7rem;
   border-radius: var(--radius-full);
   border: 1.5px solid var(--border);
   background: var(--bg-surface);
@@ -454,15 +455,29 @@ body {
   font-weight: 600;
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
   font-family: var(--font-body);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.date-nav-btn:hover { background: var(--bg-surface-subtle); }
+.date-nav-btn:hover {
+  background: var(--bg-surface-subtle);
+  border-color: #cbd5e1;
+}
+
+.date-nav-btn:active {
+  transform: scale(0.96);
+}
+
 .date-nav-today {
   background: var(--primary-light);
   color: var(--primary);
-  border-color: transparent;
+  border-color: #c7d2fe;
+}
+
+.date-nav-today:hover {
+  background: #e0e7ff;
 }
 
 /* ── Status Badge ── */
@@ -480,6 +495,47 @@ body {
 .badge-leave   { background: var(--status-leave-bg); color: var(--status-leave-text); }
 .badge-late    { background: var(--status-late-bg); color: var(--status-late-text); }
 .badge-unrecorded { background: var(--status-unrecorded-bg); color: var(--status-unrecorded-text); }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.status-badge.present {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.status-badge.leave {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.status-badge.late {
+  background-color: #f5f3ff;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+
+.status-badge.other {
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.status-badge.unrecorded {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
 
 .status-dot {
   width: 8px;
@@ -539,8 +595,8 @@ body {
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.75rem;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-full);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -548,13 +604,52 @@ body {
   background: var(--bg-surface-subtle);
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
 }
 
 .chip.selected {
   background: var(--primary-light);
   color: var(--primary);
   border-color: var(--primary);
+}
+
+/* ── Dish Chips ── */
+.dish-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+  user-select: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dish-chip:hover {
+  border-color: var(--border-focus);
+  background: var(--bg-surface-subtle);
+  transform: translateY(-1px);
+}
+
+.dish-chip:active {
+  transform: scale(0.97);
+}
+
+.dish-chip.selected {
+  background: #eef2ff;
+  color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.16);
+  font-weight: 700;
 }
 
 /* ── Passcode ── */

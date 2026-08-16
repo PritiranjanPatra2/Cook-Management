@@ -77,32 +77,60 @@ export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStart
 
       {/* Period Header Card */}
       <div className="card" style={{ marginBottom: '0.875rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.875rem' }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CalendarDays size={18} color="var(--primary)" />
-          </div>
-          <div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Current Period</div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
-              {MONTH_NAMES[month - 1]} {year}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <CalendarDays size={18} color="var(--primary)" />
             </div>
+            <div>
+              <div style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Current Period</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.2 }}>
+                {MONTH_NAMES[month - 1]} {year}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
+            <button className="date-nav-btn" onClick={handlePrevMonth} style={{ padding: '0.35rem 0.55rem' }} title="Previous Month">
+              ‹ Prev
+            </button>
+            <button className="date-nav-btn date-nav-today" onClick={() => setCurrentDate(new Date())} style={{ padding: '0.35rem 0.6rem' }}>
+              Today
+            </button>
+            <button className="date-nav-btn" onClick={handleNextMonth} style={{ padding: '0.35rem 0.55rem' }} title="Next Month">
+              Next ›
+            </button>
           </div>
         </div>
 
-        {/* View Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div className="tab-group">
-            {['day', 'week', 'month'].map(m => (
-              <button key={m} className={`tab-btn ${viewMode === m ? 'active' : ''}`} onClick={() => setViewMode(m)}>
-                {m.charAt(0).toUpperCase() + m.slice(1)}
-              </button>
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: '0.35rem' }}>
-            <button className="date-nav-btn" onClick={handlePrevMonth}>‹ Prev</button>
-            <button className="date-nav-btn date-nav-today" onClick={() => setCurrentDate(new Date())}>Today</button>
-            <button className="date-nav-btn" onClick={handleNextMonth}>Next ›</button>
-          </div>
+        {/* View Mode Segmented Bar - Full Width & Perfectly Centered */}
+        <div
+          className="tab-group"
+          style={{
+            display: 'flex',
+            width: '100%',
+            backgroundColor: 'var(--bg-surface-subtle)',
+            borderRadius: 'var(--radius-full)',
+            padding: '3px',
+            border: '1px solid var(--border)'
+          }}
+        >
+          {['day', 'week', 'month'].map(m => (
+            <button
+              key={m}
+              className={`tab-btn ${viewMode === m ? 'active' : ''}`}
+              onClick={() => setViewMode(m)}
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '0.45rem 0',
+                fontSize: '0.8125rem',
+                fontWeight: viewMode === m ? 700 : 600
+              }}
+            >
+              {m.charAt(0).toUpperCase() + m.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
 

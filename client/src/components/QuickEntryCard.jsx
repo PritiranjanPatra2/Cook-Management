@@ -161,7 +161,7 @@ export default function QuickEntryCard({
               <Sun size={18} color="#d97706" />
               <span style={{ fontWeight: '700', fontSize: '0.9375rem' }}>Morning Shift</span>
             </div>
-            <StatusBadge status={morningShift?.status || 'unrecorded'} size="sm" />
+            <StatusBadge status={morningStatus || morningShift?.status || 'unrecorded'} size="sm" />
           </div>
 
           <div style={{ display: 'flex', gap: '0.4rem' }}>
@@ -177,15 +177,16 @@ export default function QuickEntryCard({
                   }}
                   style={{
                     flex: 1,
-                    padding: '0.45rem 0.5rem',
+                    padding: '0.5rem 0.5rem',
                     borderRadius: 'var(--radius-sm)',
                     border: `1.5px solid ${isSelected ? btn.activeBorder : 'var(--border)'}`,
                     backgroundColor: isSelected ? btn.activeBg : '#f8fafc',
                     color: isSelected ? btn.color : 'var(--text-muted)',
-                    fontWeight: isSelected ? '700' : '500',
+                    fontWeight: isSelected ? '700' : '600',
                     fontSize: '0.8125rem',
                     cursor: 'pointer',
-                    transition: 'all 0.15s'
+                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
                   }}
                 >
                   {btn.label}
@@ -199,7 +200,7 @@ export default function QuickEntryCard({
             onClick={() => handleSaveMorningOnly(undefined)}
             disabled={saving}
             className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.75rem', padding: '0.35rem 0.5rem', color: '#b45309', borderColor: '#fde68a' }}
+            style={{ fontSize: '0.78125rem', padding: '0.4rem 0.5rem', color: '#b45309', borderColor: '#fde68a' }}
           >
             Save Morning Shift
           </button>
@@ -222,7 +223,7 @@ export default function QuickEntryCard({
               <Moon size={18} color="#4338ca" />
               <span style={{ fontWeight: '700', fontSize: '0.9375rem' }}>Night Shift</span>
             </div>
-            <StatusBadge status={eveningShift?.status || 'unrecorded'} size="sm" />
+            <StatusBadge status={eveningStatus || eveningShift?.status || 'unrecorded'} size="sm" />
           </div>
 
           <div style={{ display: 'flex', gap: '0.4rem' }}>
@@ -238,15 +239,16 @@ export default function QuickEntryCard({
                   }}
                   style={{
                     flex: 1,
-                    padding: '0.45rem 0.5rem',
+                    padding: '0.5rem 0.5rem',
                     borderRadius: 'var(--radius-sm)',
                     border: `1.5px solid ${isSelected ? btn.activeBorder : 'var(--border)'}`,
                     backgroundColor: isSelected ? btn.activeBg : '#f8fafc',
                     color: isSelected ? btn.color : 'var(--text-muted)',
-                    fontWeight: isSelected ? '700' : '500',
+                    fontWeight: isSelected ? '700' : '600',
                     fontSize: '0.8125rem',
                     cursor: 'pointer',
-                    transition: 'all 0.15s'
+                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
                   }}
                 >
                   {btn.label}

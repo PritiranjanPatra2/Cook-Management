@@ -89,7 +89,8 @@ export default function EditShiftModal({
     }
   };
 
-  const shiftLabel = shift.shift === 'morning' ? '🌅 Morning Shift' : '🌙 Evening Shift';
+  const isMorning = shift.shift === 'morning';
+  const shiftLabel = isMorning ? 'Morning Shift' : 'Night Shift';
   const showFood = ['present', 'late'].includes(status) || foods.length > 0;
   const showReason = ['leave', 'no_work', 'other', 'late'].includes(status);
 
@@ -98,52 +99,98 @@ export default function EditShiftModal({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.65)',
-        zIndex: 60,
-        backdropFilter: 'blur(4px)',
+        backgroundColor: 'rgba(15, 23, 42, 0.6)',
+        zIndex: 150,
+        backdropFilter: 'blur(6px)',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem'
+        alignItems: 'flex-end',
+        justifyContent: 'center'
       }}
       onClick={onClose}
     >
       <div
-        className="card fade-in"
+        className="fade-in"
         style={{
           width: '100%',
-          maxWidth: '560px',
+          maxWidth: '520px',
           maxHeight: '90vh',
           overflowY: 'auto',
           backgroundColor: '#ffffff',
-          position: 'relative'
+          position: 'relative',
+          padding: '1rem 1.25rem 1.5rem',
+          borderRadius: '20px 20px 0 0',
+          boxShadow: '0 -8px 30px rgba(0,0,0,0.18)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem'
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Top Drag Handle / Pill */}
+        <div
+          style={{
+            width: '38px',
+            height: '4px',
+            borderRadius: '2px',
+            backgroundColor: '#cbd5e1',
+            margin: '0 auto 0.25rem',
+            flexShrink: 0
+          }}
+        />
+
         {/* Modal Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1.25rem' }}>
-          <div>
-            <span style={{ fontSize: '0.8125rem', fontWeight: '600', color: 'var(--text-muted)' }}>
-              {formatDate(shift.dateString || shift.date)}
-            </span>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-main)' }}>
-              Edit {shiftLabel}
-            </h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+            <div
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '10px',
+                backgroundColor: isMorning ? '#fef3c7' : '#e0e7ff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.25rem',
+                flexShrink: 0
+              }}
+            >
+              {isMorning ? '🌅' : '🌙'}
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-muted)' }}>
+                {formatDate(shift.dateString || shift.date)}
+              </span>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1.2 }}>
+                Edit {shiftLabel}
+              </h3>
+            </div>
           </div>
+
           <button
             onClick={onClose}
-            style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted)' }}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              border: '1px solid var(--border)',
+              background: 'var(--bg-surface-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: 'var(--text-muted)'
+            }}
           >
-            <X size={20} />
+            <X size={16} />
           </button>
         </div>
 
-        {/* Status Selector */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.5rem' }}>
-            Status
+        {/* 4-Column Balanced Status Grid */}
+        <div>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.45rem' }}>
+            Shift Status
           </label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.35rem' }}>
             {STATUS_OPTIONS.map((opt) => {
               const isSelected = status === opt.value;
               return (
@@ -152,17 +199,33 @@ export default function EditShiftModal({
                   type="button"
                   onClick={() => setStatus(opt.value)}
                   style={{
-                    padding: '0.45rem 0.8rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.3rem',
+                    padding: '0.5rem 0.25rem',
                     borderRadius: 'var(--radius-md)',
                     border: `1.5px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
                     backgroundColor: isSelected ? opt.bgColor : '#ffffff',
                     color: isSelected ? opt.textColor : 'var(--text-muted)',
-                    fontWeight: isSelected ? '700' : '500',
+                    fontWeight: isSelected ? '700' : '600',
                     fontSize: '0.8125rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
                   }}
                 >
-                  {opt.label}
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      backgroundColor: opt.dotColor,
+                      display: 'inline-block',
+                      flexShrink: 0
+                    }}
+                  />
+                  <span>{opt.label}</span>
                 </button>
               );
             })}
@@ -171,9 +234,9 @@ export default function EditShiftModal({
 
         {/* Foods */}
         {showFood && (
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.5rem' }}>
-              Foods Prepared
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.45rem' }}>
+              Foods Prepared ({foods.length})
             </label>
             <FoodSelector
               dishes={dishes}
@@ -186,9 +249,10 @@ export default function EditShiftModal({
 
         {/* Reason */}
         {showReason && (
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
-              Reason
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+              <AlertTriangle size={14} color="#ef4444" />
+              <span>Reason for Absence</span>
             </label>
             <select
               value={DEFAULT_REASONS.includes(reason) ? reason : reason ? 'Other' : ''}
@@ -197,8 +261,12 @@ export default function EditShiftModal({
                 width: '100%',
                 padding: '0.5rem 0.75rem',
                 borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border)',
-                marginBottom: '0.4rem'
+                border: '1.5px solid var(--border)',
+                backgroundColor: 'var(--bg-surface-subtle)',
+                fontSize: '0.875rem',
+                color: 'var(--text-main)',
+                marginBottom: '0.4rem',
+                outline: 'none'
               }}
             >
               <option value="">Select reason...</option>
@@ -212,14 +280,17 @@ export default function EditShiftModal({
             {(reason === 'Other' || (!DEFAULT_REASONS.includes(reason) && reason)) && (
               <input
                 type="text"
-                placeholder="Custom reason..."
+                placeholder="Specify custom reason..."
                 value={reason === 'Other' ? '' : reason}
                 onChange={(e) => setReason(e.target.value || 'Other')}
                 style={{
                   width: '100%',
                   padding: '0.5rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border)'
+                  border: '1.5px solid var(--border)',
+                  backgroundColor: '#ffffff',
+                  fontSize: '0.875rem',
+                  outline: 'none'
                 }}
               />
             )}
@@ -227,26 +298,30 @@ export default function EditShiftModal({
         )}
 
         {/* Note */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', marginBottom: '0.4rem' }}>
-            Note
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+            Note (Optional)
           </label>
           <input
             type="text"
-            placeholder="Add note..."
+            placeholder="e.g. Informed in advance, made special dishes..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
             style={{
               width: '100%',
               padding: '0.5rem 0.75rem',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border)'
+              border: '1.5px solid var(--border)',
+              backgroundColor: 'var(--bg-surface-subtle)',
+              fontSize: '0.875rem',
+              color: 'var(--text-main)',
+              outline: 'none'
             }}
           />
         </div>
 
         {errorMsg && (
-          <p style={{ color: '#ef4444', fontSize: '0.8125rem', marginBottom: '1rem', fontWeight: '600' }}>
+          <p style={{ color: '#ef4444', fontSize: '0.8125rem', fontWeight: '600' }}>
             {errorMsg}
           </p>
         )}
@@ -258,8 +333,7 @@ export default function EditShiftModal({
               padding: '0.875rem',
               backgroundColor: '#fef2f2',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid #fecaca',
-              marginBottom: '1rem'
+              border: '1px solid #fecaca'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#b91c1c', marginBottom: '0.5rem' }}>
@@ -273,7 +347,8 @@ export default function EditShiftModal({
                 type="button"
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="btn btn-danger btn-sm"
+                className="btn btn-sm"
+                style={{ backgroundColor: '#ef4444', color: '#fff', padding: '0.35rem 0.75rem' }}
               >
                 {isDeleting ? 'Deleting...' : 'Yes, Delete Entry'}
               </button>
@@ -289,13 +364,13 @@ export default function EditShiftModal({
         )}
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '0.75rem', gap: '0.5rem' }}>
           {shift._id ? (
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(true)}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.35rem',
                 border: 'none',
@@ -303,15 +378,17 @@ export default function EditShiftModal({
                 color: '#ef4444',
                 cursor: 'pointer',
                 fontSize: '0.8125rem',
-                fontWeight: '600'
+                fontWeight: '700',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
             >
               <Trash2 size={15} />
-              <span>Delete Entry</span>
+              <span>Delete</span>
             </button>
           ) : <div />}
 
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
             <button type="button" onClick={onClose} className="btn btn-secondary btn-sm">
               Cancel
             </button>

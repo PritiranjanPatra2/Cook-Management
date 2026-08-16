@@ -282,146 +282,178 @@ export default function Attendance({ onNavigate }) {
             </div>
           )}
 
-          {/* MONTH VIEW TABLE */}
+          {/* MONTH VIEW TABLE & MOBILE CARDS */}
           {viewMode === 'month' && (
             <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
               {/* Filter and Search Bar */}
               <div
                 style={{
-                  padding: '1.25rem 1.5rem',
+                  padding: '1rem',
                   display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
                   borderBottom: '1px solid var(--border)',
                   backgroundColor: '#ffffff'
                 }}
               >
-                {/* Status Badges Filter */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center' }}>
+                {/* Search Input */}
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <Search size={15} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input
+                    type="text"
+                    placeholder="Search food, reasons, notes..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem 0.75rem 0.5rem 2.25rem',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1.5px solid var(--border)',
+                      fontSize: '0.8125rem',
+                      backgroundColor: 'var(--bg-surface-subtle)',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                {/* Status Badges Filter Strip */}
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '0.35rem',
+                    overflowX: 'auto',
+                    paddingBottom: '2px',
+                    scrollbarWidth: 'none',
+                    WebkitOverflowScrolling: 'touch'
+                  }}
+                >
                   <button
                     onClick={() => setStatusFilter('all')}
                     style={{
                       padding: '0.35rem 0.75rem',
                       borderRadius: 'var(--radius-full)',
-                      border: '1px solid var(--border)',
-                      backgroundColor: statusFilter === 'all' ? 'var(--primary)' : 'var(--bg-surface-subtle)',
-                      color: statusFilter === 'all' ? '#ffffff' : 'var(--text-muted)',
+                      border: `1.5px solid ${statusFilter === 'all' ? 'var(--primary)' : 'var(--border)'}`,
+                      backgroundColor: statusFilter === 'all' ? 'var(--primary-light)' : 'var(--bg-surface-subtle)',
+                      color: statusFilter === 'all' ? 'var(--primary)' : 'var(--text-muted)',
                       fontSize: '0.8125rem',
-                      fontWeight: '600',
-                      cursor: 'pointer'
+                      fontWeight: statusFilter === 'all' ? '700' : '600',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                      transition: 'all 0.15s ease'
                     }}
                   >
                     All ({shifts.length})
                   </button>
 
-                  {STATUS_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setStatusFilter(opt.value)}
-                      style={{
-                        padding: '0.35rem 0.75rem',
-                        borderRadius: 'var(--radius-full)',
-                        border: `1px solid ${statusFilter === opt.value ? opt.borderColor : 'var(--border)'}`,
-                        backgroundColor: statusFilter === opt.value ? opt.bgColor : 'var(--bg-surface-subtle)',
-                        color: statusFilter === opt.value ? opt.textColor : 'var(--text-muted)',
-                        fontSize: '0.8125rem',
-                        fontWeight: '600',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Search Input */}
-                <div style={{ position: 'relative', width: '240px' }}>
-                  <Search size={15} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                  <input
-                    type="text"
-                    placeholder="Search food, notes..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.45rem 0.75rem 0.45rem 2.25rem',
-                      borderRadius: 'var(--radius-md)',
-                      border: '1px solid var(--border)',
-                      fontSize: '0.8125rem',
-                      backgroundColor: 'var(--bg-surface-subtle)'
-                    }}
-                  />
+                  {STATUS_OPTIONS.map((opt) => {
+                    const isSelected = statusFilter === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => setStatusFilter(opt.value)}
+                        style={{
+                          padding: '0.35rem 0.75rem',
+                          borderRadius: 'var(--radius-full)',
+                          border: `1.5px solid ${isSelected ? opt.borderColor : 'var(--border)'}`,
+                          backgroundColor: isSelected ? opt.bgColor : 'var(--bg-surface-subtle)',
+                          color: isSelected ? opt.textColor : 'var(--text-muted)',
+                          fontSize: '0.8125rem',
+                          fontWeight: isSelected ? '700' : '600',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0,
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Table */}
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: 'var(--bg-surface-subtle)', borderBottom: '1px solid var(--border)' }}>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>DATE</th>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>SHIFT</th>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>STATUS</th>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>FOOD PREPARED</th>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)' }}>REASON / NOTE</th>
-                      <th style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '700', color: 'var(--text-muted)', textAlign: 'right' }}>ACTION</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredShifts.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-                          No shifts matching your filter criteria.
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredShifts.map((shift) => (
-                        <tr
-                          key={shift._id}
-                          style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.15s' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-surface-subtle)')}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                        >
-                          <td style={{ padding: '0.875rem 1.25rem', fontWeight: '700', color: 'var(--text-main)' }}>
-                            {formatDateShort(shift.dateString || shift.date)}
-                          </td>
-                          <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', fontWeight: '600', textTransform: 'capitalize' }}>
-                            {shift.shift === 'morning' ? '🌅 Morning' : '🌙 Evening'}
-                          </td>
-                          <td style={{ padding: '0.875rem 1.25rem' }}>
+              {/* Records List / Cards */}
+              <div style={{ padding: '0.5rem' }}>
+                {filteredShifts.length === 0 ? (
+                  <div style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                    No shifts matching your filter criteria.
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {filteredShifts.map((shift) => (
+                      <div
+                        key={shift._id}
+                        style={{
+                          padding: '0.875rem 1rem',
+                          borderRadius: 'var(--radius-md)',
+                          border: '1px solid var(--border)',
+                          backgroundColor: 'var(--bg-surface)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.5rem',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {/* Top Row: Date + Shift + Status + Edit */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: '800', fontSize: '0.9375rem', color: 'var(--text-main)' }}>
+                              {formatDateShort(shift.dateString || shift.date)}
+                            </span>
+                            <span
+                              style={{
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                padding: '0.15rem 0.5rem',
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: shift.shift === 'morning' ? '#fef3c7' : '#e0e7ff',
+                                color: shift.shift === 'morning' ? '#d97706' : '#4338ca'
+                              }}
+                            >
+                              {shift.shift === 'morning' ? '🌅 Morning' : '🌙 Night'}
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                             <StatusBadge status={shift.status} size="sm" />
-                          </td>
-                          <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', fontWeight: '600', color: 'var(--primary)' }}>
-                            {shift.foods && shift.foods.length > 0
-                              ? shift.foods.map((f) => f.name || f).join(', ')
-                              : '—'}
-                          </td>
-                          <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                            {shift.reason ? (
-                              <span style={{ color: '#b91c1c', fontWeight: '600' }}>{shift.reason}</span>
-                            ) : null}
-                            {shift.reason && shift.note ? ' • ' : null}
-                            {shift.note ? <span>{shift.note}</span> : null}
-                            {!shift.reason && !shift.note ? '—' : null}
-                          </td>
-                          <td style={{ padding: '0.875rem 1.25rem', textAlign: 'right' }}>
                             <button
                               onClick={() => handleEdit(shift)}
                               className="btn btn-secondary btn-sm"
-                              style={{ padding: '0.35rem 0.6rem' }}
+                              style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                               title="Edit Entry"
                             >
-                              <Edit2 size={13} />
+                              <Edit2 size={12} />
                               <span>Edit</span>
                             </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                          </div>
+                        </div>
+
+                        {/* Food Prepared */}
+                        {shift.foods && shift.foods.length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem' }}>
+                            <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Food:</span>
+                            <span style={{ color: 'var(--primary)', fontWeight: '700' }}>
+                              {shift.foods.map((f) => f.name || f).join(', ')}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Reason & Note */}
+                        {(shift.reason || shift.note) && (
+                          <div style={{ fontSize: '0.78125rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            {shift.reason && (
+                              <span style={{ color: '#b91c1c', fontWeight: '700', backgroundColor: '#fef2f2', padding: '1px 6px', borderRadius: '4px' }}>
+                                {shift.reason}
+                              </span>
+                            )}
+                            {shift.note && <span>{shift.note}</span>}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
