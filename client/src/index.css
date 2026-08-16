@@ -56,32 +56,38 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body, #root {
-  height: 100%;
-  overflow: hidden;
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: var(--font-body);
-  background-color: #d8dce8;
+  background-color: var(--bg-app);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* ── Mobile Shell ── */
 .mobile-shell {
   position: relative;
   width: 100%;
-  max-width: var(--max-mobile-width);
-  height: 100vh;
-  height: 100dvh;
+  max-width: 520px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
   background: var(--bg-app);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 60px rgba(0,0,0,0.25);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 540px) {
+  .mobile-shell {
+    max-width: 100%;
+    box-shadow: none;
+  }
 }
 
 /* ── Mobile Header ── */
@@ -554,16 +560,16 @@ body {
 /* ── Passcode ── */
 .passcode-shell {
   width: 100%;
-  max-width: var(--max-mobile-width);
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(160deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  padding: 2rem 1.5rem;
+  gap: 1.5rem;
+  padding: 2rem 1.25rem;
+  box-sizing: border-box;
 }
 
 .passcode-dot {
@@ -580,8 +586,8 @@ body {
 }
 
 .keypad-btn {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.15);
