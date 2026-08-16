@@ -20,6 +20,9 @@ export default function EditShiftModal({
   const [foods, setFoods] = useState(
     Array.isArray(shift.foods) ? shift.foods.map((f) => (typeof f === 'object' ? f._id : f)) : []
   );
+  const [foodDetails, setFoodDetails] = useState(
+    Array.isArray(shift.foodDetails) ? shift.foodDetails : []
+  );
   const [reason, setReason] = useState(shift.reason || '');
   const [note, setNote] = useState(shift.note || '');
   const [isSaving, setIsSaving] = useState(false);
@@ -29,12 +32,29 @@ export default function EditShiftModal({
 
   useEffect(() => {
     setStatus(shift.status || 'present');
-    setFoods(Array.isArray(shift.foods) ? shift.foods.map((f) => (typeof f === 'object' ? f._id : f)) : []);
+    const fList = Array.isArray(shift.foods) ? shift.foods.map((f) => (typeof f === 'object' ? f._id : f)) : [];
+    setFoods(fList);
+
+    let fdList = [];
+    if (Array.isArray(shift.foodDetails) && shift.foodDetails.length > 0) {
+      fdList = shift.foodDetails.map(item => ({
+        dish: item.dish?._id || item.dish || item.id,
+        quantity: item.quantity || ''
+      }));
+    } else {
+      fdList = fList.map(dishId => ({ dish: dishId, quantity: '' }));
+    }
+    setFoodDetails(fdList);
     setReason(shift.reason || '');
     setNote(shift.note || '');
     setShowDeleteConfirm(false);
     setErrorMsg('');
   }, [shift]);
+
+  const handleFoodsChange = (newFoods, newDetails) => {
+    setFoods(newFoods);
+    if (newDetails) setFoodDetails(newDetails);
+  };
 
   const handleSave = async (e) => {
     e?.preventDefault();
@@ -47,6 +67,7 @@ export default function EditShiftModal({
         res = await shiftService.updateShift(shift._id, {
           status,
           foods,
+          foodDetails,
           reason,
           note
         });
@@ -56,6 +77,7 @@ export default function EditShiftModal({
           shift: shift.shift,
           status,
           foods,
+          foodDetails,
           reason,
           note
         });
@@ -243,7 +265,8 @@ export default function EditShiftModal({
             <FoodSelector
               dishes={dishes}
               selectedDishIds={foods}
-              onChange={setFoods}
+              foodDetails={foodDetails}
+              onChange={handleFoodsChange}
               onDishCreated={onDishCreated}
             />
           </div>

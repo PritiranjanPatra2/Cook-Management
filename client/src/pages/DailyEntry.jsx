@@ -19,8 +19,8 @@ export default function DailyEntry() {
   const [toast, setToast] = useState(null);
   const [activeShift, setActiveShift] = useState('morning'); // 'morning' | 'evening' | 'both'
 
-  const [morningShift, setMorningShift] = useState({ status: 'present', foods: [], reason: '', note: '' });
-  const [eveningShift, setEveningShift] = useState({ status: 'present', foods: [], reason: '', note: '' });
+  const [morningShift, setMorningShift] = useState({ status: 'present', foods: [], foodDetails: [], reason: '', note: '' });
+  const [eveningShift, setEveningShift] = useState({ status: 'present', foods: [], foodDetails: [], reason: '', note: '' });
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -49,8 +49,38 @@ export default function DailyEntry() {
         const shifts = res.data || [];
         const m = shifts.find(s => s.shift === 'morning');
         const e = shifts.find(s => s.shift === 'evening');
-        setMorningShift({ _id: m?._id, status: m?.status || 'present', foods: m?.foods?.map(f => f._id || f) || [], reason: m?.reason || '', note: m?.note || '' });
-        setEveningShift({ _id: e?._id, status: e?.status || 'present', foods: e?.foods?.map(f => f._id || f) || [], reason: e?.reason || '', note: e?.note || '' });
+
+        const normalizeDetails = (shiftObj) => {
+          if (!shiftObj) return [];
+          if (Array.isArray(shiftObj.foodDetails) && shiftObj.foodDetails.length > 0) {
+            return shiftObj.foodDetails.map(item => ({
+              dish: item.dish?._id || item.dish || item,
+              quantity: item.quantity || ''
+            }));
+          }
+          return (shiftObj.foods || []).map(f => ({
+            dish: f._id || f,
+            quantity: ''
+          }));
+        };
+
+        setMorningShift({
+          _id: m?._id,
+          status: m?.status || 'present',
+          foods: m?.foods?.map(f => f._id || f) || [],
+          foodDetails: normalizeDetails(m),
+          reason: m?.reason || '',
+          note: m?.note || ''
+        });
+
+        setEveningShift({
+          _id: e?._id,
+          status: e?.status || 'present',
+          foods: e?.foods?.map(f => f._id || f) || [],
+          foodDetails: normalizeDetails(e),
+          reason: e?.reason || '',
+          note: e?.note || ''
+        });
       }
     } catch (err) { console.error(err); } finally { setLoading(false); }
   };

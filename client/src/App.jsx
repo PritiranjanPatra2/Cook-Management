@@ -13,6 +13,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import Passcode from './pages/Passcode';
+import TodayMealsView from './pages/TodayMealsView';
 import Dashboard from './pages/Dashboard';
 import DailyEntry from './pages/DailyEntry';
 import Attendance from './pages/Attendance';
@@ -25,17 +26,19 @@ import { settingsService } from './services/settingsService';
 import { formatDate } from './utils/dateUtils';
 
 const BOTTOM_TABS = [
-  { id: 'dashboard',   label: 'Home',      icon: LayoutDashboard },
-  { id: 'daily-entry', label: 'Entry',     icon: ClipboardList },
-  { id: 'calendar',    label: 'Calendar',  icon: CalendarDays },
-  { id: 'attendance',  label: 'Attendance',icon: BarChart2 },
+  { id: 'today-menu',  label: "Today's Food", icon: UtensilsCrossed },
+  { id: 'dashboard',   label: 'Dashboard',    icon: LayoutDashboard },
+  { id: 'daily-entry', label: 'Entry',        icon: ClipboardList },
+  { id: 'calendar',    label: 'Calendar',     icon: CalendarDays },
+  { id: 'attendance',  label: 'Attendance',   icon: BarChart2 },
 ];
 
 const DRAWER_ITEMS = [
-  { id: 'dashboard',     label: 'Dashboard',        icon: LayoutDashboard },
+  { id: 'today-menu',    label: "What Cook Made",   icon: UtensilsCrossed },
+  { id: 'dashboard',     label: 'Dashboard Stats',  icon: LayoutDashboard },
   { id: 'daily-entry',   label: 'Daily Entry',      icon: ClipboardList },
   { id: 'calendar',      label: 'Calendar',         icon: CalendarDays },
-  { id: 'attendance',    label: 'Attendance',        icon: BarChart2 },
+  { id: 'attendance',    label: 'Attendance',       icon: BarChart2 },
   { id: 'reports',       label: 'Monthly Reports',  icon: BookOpen },
   { id: 'food-analysis', label: 'Food Analysis',    icon: BarChart2 },
   { id: 'food-meals',    label: 'Food Library',     icon: UtensilsCrossed },
@@ -43,6 +46,7 @@ const DRAWER_ITEMS = [
 ];
 
 const TAB_TITLES = {
+  'today-menu':   "What Cook Made Today",
   dashboard:      'Household Routine Dashboard',
   'daily-entry':  'Daily Entry',
   attendance:     'Attendance',
@@ -57,7 +61,7 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() =>
     localStorage.getItem('cook_tracker_auth') === 'true'
   );
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('today-menu');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [settings, setSettings] = useState({ cookName: 'Cook', trackingStartDate: '2026-08-16' });
 
@@ -80,15 +84,16 @@ export default function App() {
 
   const renderPage = () => {
     switch (activeTab) {
+      case 'today-menu':     return <TodayMealsView onNavigate={navigate} cookName={settings.cookName} />;
       case 'dashboard':      return <Dashboard onNavigate={navigate} cookName={settings.cookName} trackingStartDate={settings.trackingStartDate} />;
-      case 'daily-entry':    return <DailyEntry onSavedNavigate={() => navigate('dashboard')} />;
+      case 'daily-entry':    return <DailyEntry onSavedNavigate={() => navigate('today-menu')} />;
       case 'attendance':     return <Attendance onNavigate={navigate} />;
       case 'food-meals':     return <FoodMeals />;
       case 'calendar':       return <CalendarPage onNavigate={() => navigate('daily-entry')} />;
       case 'reports':        return <Reports cookName={settings.cookName} />;
       case 'food-analysis':  return <FoodAnalysis />;
       case 'settings':       return <Settings onSettingsUpdated={s => setSettings(p => ({ ...p, ...s }))} />;
-      default:               return <Dashboard onNavigate={navigate} cookName={settings.cookName} />;
+      default:               return <TodayMealsView onNavigate={navigate} cookName={settings.cookName} />;
     }
   };
 

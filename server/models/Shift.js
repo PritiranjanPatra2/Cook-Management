@@ -28,6 +28,19 @@ const shiftSchema = new mongoose.Schema(
         ref: 'Dish'
       }
     ],
+    foodDetails: [
+      {
+        dish: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Dish'
+        },
+        quantity: {
+          type: String,
+          default: '',
+          trim: true
+        }
+      }
+    ],
     reason: {
       type: String,
       default: '',
@@ -58,5 +71,9 @@ shiftSchema.pre('validate', function (next) {
   }
   next();
 });
+
+if (mongoose.models && mongoose.models.Shift) {
+  delete mongoose.models.Shift;
+}
 
 module.exports = mongoose.model('Shift', shiftSchema);

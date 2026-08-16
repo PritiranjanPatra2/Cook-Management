@@ -9,8 +9,9 @@ const path = require('path');
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '.env') });
 
+// Cook Management Routine Server API (v1.2)
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Connect to Database
 connectDB();

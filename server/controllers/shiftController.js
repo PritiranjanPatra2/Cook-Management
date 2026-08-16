@@ -34,6 +34,7 @@ exports.getShifts = async (req, res, next) => {
 
     const shifts = await Shift.find(filter)
       .populate('foods', 'name category active')
+      .populate('foodDetails.dish', 'name category active')
       .sort({ dateString: -1, shift: -1 });
 
     return res.json({
@@ -50,7 +51,9 @@ exports.getShifts = async (req, res, next) => {
 exports.getShiftById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const shift = await Shift.findById(id).populate('foods', 'name category active');
+    const shift = await Shift.findById(id)
+      .populate('foods', 'name category active')
+      .populate('foodDetails.dish', 'name category active');
 
     if (!shift) {
       return res.status(404).json({ success: false, message: 'Shift not found' });
@@ -68,7 +71,7 @@ exports.getShiftById = async (req, res, next) => {
 // POST /api/shifts (Create or update shift by date & shift type)
 exports.createOrUpdateShift = async (req, res, next) => {
   try {
-    const { date, shift, status, foods, reason, note } = req.body;
+    const { date, shift, status, foods, foodDetails, reason, note } = req.body;
 
     if (!date) {
       return res.status(400).json({ success: false, message: 'Date is required' });
@@ -82,10 +85,25 @@ exports.createOrUpdateShift = async (req, res, next) => {
     const dateObj = new Date(date);
     const dateString = formatDateString(dateObj);
 
-    // Business rule: Clear foods if status is not present or late, unless user specified
-    let foodsList = Array.isArray(foods) ? foods : [];
-    if (['leave', 'no_work'].includes(status) && (!foods || foods.length === 0)) {
+    // Normalize foods and foodDetails
+    let foodDetailsList = [];
+    if (Array.isArray(foodDetails) && foodDetails.length > 0) {
+      foodDetailsList = foodDetails.map(item => ({
+        dish: item.dish?._id || item.dish || item,
+        quantity: typeof item.quantity === 'string' ? item.quantity.trim() : (item.quantity ? String(item.quantity) : '')
+      })).filter(item => item.dish);
+    } else if (Array.isArray(foods) && foods.length > 0) {
+      foodDetailsList = foods.map(f => ({
+        dish: f?._id || f,
+        quantity: ''
+      })).filter(item => item.dish);
+    }
+
+    let foodsList = foodDetailsList.map(item => item.dish);
+
+    if (['leave', 'no_work'].includes(status) && (!foods || foods.length === 0) && foodDetailsList.length === 0) {
       foodsList = [];
+      foodDetailsList = [];
     }
 
     const updateData = {
@@ -94,15 +112,18 @@ exports.createOrUpdateShift = async (req, res, next) => {
       shift: shiftType,
       status: status || 'present',
       foods: foodsList,
+      foodDetails: foodDetailsList,
       reason: reason || '',
       note: note || ''
     };
 
     const savedShift = await Shift.findOneAndUpdate(
       { dateString, shift: shiftType },
-      updateData,
+      { $set: updateData },
       { new: true, upsert: true, runValidators: true }
-    ).populate('foods', 'name category active');
+    )
+      .populate('foods', 'name category active')
+      .populate('foodDetails.dish', 'name category active');
 
     return res.status(200).json({
       success: true,
@@ -127,40 +148,54 @@ exports.batchSaveDayShifts = async (req, res, next) => {
     const dateString = formatDateString(dateObj);
     const results = {};
 
-    if (morning) {
-      const morningData = {
+    const normalizeShiftData = (shiftData, shiftType) => {
+      let foodDetailsList = [];
+      if (Array.isArray(shiftData.foodDetails) && shiftData.foodDetails.length > 0) {
+        foodDetailsList = shiftData.foodDetails.map(item => ({
+          dish: item.dish?._id || item.dish || item,
+          quantity: typeof item.quantity === 'string' ? item.quantity.trim() : (item.quantity ? String(item.quantity) : '')
+        })).filter(item => item.dish);
+      } else if (Array.isArray(shiftData.foods) && shiftData.foods.length > 0) {
+        foodDetailsList = shiftData.foods.map(f => ({
+          dish: f?._id || f,
+          quantity: ''
+        })).filter(item => item.dish);
+      }
+
+      const foodsList = foodDetailsList.map(item => item.dish);
+
+      return {
         date: dateObj,
         dateString,
-        shift: 'morning',
-        status: morning.status || 'present',
-        foods: Array.isArray(morning.foods) ? morning.foods : [],
-        reason: morning.reason || '',
-        note: morning.note || ''
+        shift: shiftType,
+        status: shiftData.status || 'present',
+        foods: foodsList,
+        foodDetails: foodDetailsList,
+        reason: shiftData.reason || '',
+        note: shiftData.note || ''
       };
+    };
 
+    if (morning) {
+      const morningData = normalizeShiftData(morning, 'morning');
       results.morning = await Shift.findOneAndUpdate(
         { dateString, shift: 'morning' },
-        morningData,
+        { $set: morningData },
         { new: true, upsert: true, runValidators: true }
-      ).populate('foods', 'name category active');
+      )
+        .populate('foods', 'name category active')
+        .populate('foodDetails.dish', 'name category active');
     }
 
     if (evening) {
-      const eveningData = {
-        date: dateObj,
-        dateString,
-        shift: 'evening',
-        status: evening.status || 'present',
-        foods: Array.isArray(evening.foods) ? evening.foods : [],
-        reason: evening.reason || '',
-        note: evening.note || ''
-      };
-
+      const eveningData = normalizeShiftData(evening, 'evening');
       results.evening = await Shift.findOneAndUpdate(
         { dateString, shift: 'evening' },
-        eveningData,
+        { $set: eveningData },
         { new: true, upsert: true, runValidators: true }
-      ).populate('foods', 'name category active');
+      )
+        .populate('foods', 'name category active')
+        .populate('foodDetails.dish', 'name category active');
     }
 
     return res.status(200).json({
@@ -177,20 +212,35 @@ exports.batchSaveDayShifts = async (req, res, next) => {
 exports.updateShiftById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status, foods, reason, note } = req.body;
+    const { status, foods, foodDetails, reason, note } = req.body;
 
     const shift = await Shift.findById(id);
     if (!shift) {
       return res.status(404).json({ success: false, message: 'Shift not found' });
     }
 
-    if (status) shift.status = status;
-    if (foods !== undefined) shift.foods = Array.isArray(foods) ? foods : [];
+    if (status !== undefined) shift.status = status;
+
+    if (foodDetails !== undefined) {
+      const normalizedDetails = (Array.isArray(foodDetails) ? foodDetails : []).map(item => ({
+        dish: item.dish?._id || item.dish || item,
+        quantity: typeof item.quantity === 'string' ? item.quantity.trim() : (item.quantity ? String(item.quantity) : '')
+      })).filter(item => item.dish);
+      shift.foodDetails = normalizedDetails;
+      shift.foods = normalizedDetails.map(item => item.dish);
+      shift.markModified('foodDetails');
+      shift.markModified('foods');
+    } else if (foods !== undefined) {
+      shift.foods = Array.isArray(foods) ? foods : [];
+      shift.markModified('foods');
+    }
+
     if (reason !== undefined) shift.reason = reason;
     if (note !== undefined) shift.note = note;
 
     await shift.save();
     await shift.populate('foods', 'name category active');
+    await shift.populate('foodDetails.dish', 'name category active');
 
     return res.json({
       success: true,

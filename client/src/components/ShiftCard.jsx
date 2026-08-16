@@ -24,10 +24,11 @@ export default function ShiftCard({
     });
   };
 
-  const handleFoodsChange = (newFoods) => {
+  const handleFoodsChange = (newFoods, newDetails) => {
     onChange({
       ...shiftData,
-      foods: newFoods
+      foods: newFoods,
+      foodDetails: newDetails || shiftData.foodDetails || []
     });
   };
 
@@ -171,6 +172,7 @@ export default function ShiftCard({
         <FoodSelector
           dishes={dishes}
           selectedDishIds={shiftData.foods || []}
+          foodDetails={shiftData.foodDetails || []}
           onChange={handleFoodsChange}
           onDishCreated={onDishCreated}
         />
