@@ -1,19 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CalendarDays,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Clock,
-  HelpCircle,
-  Utensils,
-  ChevronRight,
-  TrendingUp,
-  Award,
-  Sparkles
+  CalendarDays, CheckCircle2, XCircle, Clock, HelpCircle,
+  ChevronRight, Award, TrendingUp, Sun, Moon
 } from 'lucide-react';
-import DateFilter from '../components/DateFilter';
-import StatCard from '../components/StatCard';
 import QuickEntryCard from '../components/QuickEntryCard';
 import AttendanceChart from '../components/AttendanceChart';
 import StatusBadge from '../components/StatusBadge';
@@ -23,9 +12,10 @@ import { reportService } from '../services/reportService';
 import { shiftService } from '../services/shiftService';
 import { dishService } from '../services/dishService';
 import { formatDate, formatDateShort, toYYYYMMDD } from '../utils/dateUtils';
+import { MONTH_NAMES } from '../utils/constants';
 
 export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStartDate }) {
-  const [viewMode, setViewMode] = useState('month'); // 'day' | 'week' | 'month'
+  const [viewMode, setViewMode] = useState('month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState(null);
@@ -36,338 +26,243 @@ export default function Dashboard({ onNavigate, cookName = 'Cook', trackingStart
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1; // 1-indexed
+  const month = currentDate.getMonth() + 1;
   const todayDateStr = toYYYYMMDD(new Date());
 
   const fetchData = async () => {
     try {
       setLoading(true);
-
-      // Fetch dishes
-      const dishesRes = await dishService.getDishes({ activeOnly: 'true' });
+      const [dishesRes, monthRes, shiftsRes, todayRes] = await Promise.all([
+        dishService.getDishes({ activeOnly: 'true' }),
+        reportService.getMonthReport(month, year),
+        shiftService.getShifts({ month, year }),
+        reportService.getDayReport(todayDateStr)
+      ]);
       if (dishesRes.success) setDishes(dishesRes.data);
-
-      // Fetch Month Report
-      const monthRes = await reportService.getMonthReport(month, year);
-      if (monthRes.success) {
-        setReportData(monthRes.data);
-      }
-
-      // Fetch Recent Shifts (last 10)
-      const shiftsRes = await shiftService.getShifts({ month, year });
-      if (shiftsRes.success) {
-        setRecentShifts(shiftsRes.data.slice(0, 10));
-      }
-
-      // Fetch Today's Shifts for Quick Entry
-      const todayRes = await reportService.getDayReport(todayDateStr);
-      if (todayRes.success) {
-        setTodayShifts(todayRes.data);
-      }
+      if (monthRes.success) setReportData(monthRes.data);
+      if (shiftsRes.success) setRecentShifts(shiftsRes.data.slice(0, 8));
+      if (todayRes.success) setTodayShifts(todayRes.data);
     } catch (err) {
-      console.error('Error fetching dashboard data:', err);
+      console.error('Dashboard fetch error:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [month, year]);
+  useEffect(() => { fetchData(); }, [month, year]);
 
-  const handleEditShift = (shift) => {
-    setSelectedShiftForEdit(shift);
-    setIsEditModalOpen(true);
+  const handlePrevMonth = () => {
+    const d = new Date(currentDate);
+    d.setMonth(d.getMonth() - 1);
+    setCurrentDate(d);
   };
 
-  if (loading && !reportData) {
-    return <LoadingSpinner text="Loading dashboard statistics..." />;
-  }
+  const handleNextMonth = () => {
+    const d = new Date(currentDate);
+    d.setMonth(d.getMonth() + 1);
+    setCurrentDate(d);
+  };
+
+  if (loading && !reportData) return <LoadingSpinner text="Loading dashboard..." />;
 
   const expectedShifts = reportData?.expectedShifts || 0;
-  const presentCount = reportData?.presentCount || 0;
-  const leaveCount = reportData?.leaveCount || 0;
-  const lateCount = reportData?.lateCount || 0;
-  const notRecorded = reportData?.notRecorded || 0;
-  const attendancePercentage = reportData?.attendancePercentage || 0;
+  const presentCount  = reportData?.presentCount  || 0;
+  const leaveCount    = reportData?.leaveCount    || 0;
+  const lateCount     = reportData?.lateCount     || 0;
+  const notRecorded   = reportData?.notRecorded   || 0;
+  const attendancePct = reportData?.attendancePercentage || 0;
 
   return (
-    <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      {/* Date Filter & Mode Toggle */}
-      <DateFilter
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        currentDate={currentDate}
-        setCurrentDate={setCurrentDate}
-        onToday={() => setCurrentDate(new Date())}
+    <div className="fade-in">
+
+      {/* Period Header Card */}
+      <div className="card" style={{ marginBottom: '0.875rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.875rem' }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CalendarDays size={18} color="var(--primary)" />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Current Period</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              {MONTH_NAMES[month - 1]} {year}
+            </div>
+          </div>
+        </div>
+
+        {/* View Toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div className="tab-group">
+            {['day', 'week', 'month'].map(m => (
+              <button key={m} className={`tab-btn ${viewMode === m ? 'active' : ''}`} onClick={() => setViewMode(m)}>
+                {m.charAt(0).toUpperCase() + m.slice(1)}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: 'flex', gap: '0.35rem' }}>
+            <button className="date-nav-btn" onClick={handlePrevMonth}>‹ Prev</button>
+            <button className="date-nav-btn date-nav-today" onClick={() => setCurrentDate(new Date())}>Today</button>
+            <button className="date-nav-btn" onClick={handleNextMonth}>Next ›</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Stat Grid (2×2) */}
+      <div className="stat-grid">
+        <div className="stat-card">
+          <div className="stat-card-icon" style={{ background: '#eef2ff' }}>
+            <CalendarDays size={18} color="#4f46e5" />
+          </div>
+          <div className="stat-card-value">{expectedShifts}</div>
+          <div className="stat-card-label">Expected Shifts</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-icon" style={{ background: '#ecfdf5' }}>
+            <CheckCircle2 size={18} color="#10b981" />
+          </div>
+          <div className="stat-card-value" style={{ color: '#10b981' }}>{presentCount}</div>
+          <div className="stat-card-label">Present Shifts</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-icon" style={{ background: '#fef2f2' }}>
+            <XCircle size={18} color="#ef4444" />
+          </div>
+          <div className="stat-card-value" style={{ color: '#ef4444' }}>{leaveCount}</div>
+          <div className="stat-card-label">Leave Shifts</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-icon" style={{ background: '#f0fdf4' }}>
+            <TrendingUp size={18} color="#22c55e" />
+          </div>
+          <div className="stat-card-value" style={{ color: '#22c55e' }}>{attendancePct}%</div>
+          <div className="stat-card-label">Attendance Rate</div>
+        </div>
+      </div>
+
+      {/* Secondary Stats Row */}
+      <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.875rem' }}>
+        <div style={{ flex: 1, background: '#f5f3ff', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Clock size={16} color="#8b5cf6" />
+          <div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: '#6d28d9' }}>{lateCount}</div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#7c3aed' }}>Late Shifts</div>
+          </div>
+        </div>
+        <div style={{ flex: 1, background: '#f8fafc', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid var(--border)' }}>
+          <HelpCircle size={16} color="#94a3b8" />
+          <div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: '#475569' }}>{notRecorded}</div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8' }}>Not Recorded</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Entry Card */}
+      <div className="section-label">Today's Entry</div>
+      <QuickEntryCard
+        todayDate={new Date()}
+        morningShift={todayShifts.morning}
+        eveningShift={todayShifts.evening}
+        onRefresh={fetchData}
+        onOpenFullEntry={() => onNavigate('daily-entry')}
       />
 
-      {/* Main Top Stat Cards Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-          gap: '1rem'
-        }}
-      >
-        <StatCard
-          title="Expected Shifts"
-          value={expectedShifts}
-          subValue={`${reportData?.countedDays || 0} days × 2 shifts`}
-          icon={CalendarDays}
-          accentColor="#6366f1"
-        />
+      {/* Attendance Chart */}
+      <div className="section-label" style={{ marginTop: '0.25rem' }}>Attendance Breakdown</div>
+      <AttendanceChart
+        present={presentCount}
+        leave={leaveCount}
+        late={lateCount}
+        notRecorded={notRecorded}
+        attendancePercentage={attendancePct}
+      />
 
-        <StatCard
-          title="Present"
-          value={presentCount}
-          subValue={`${presentCount / 2} day equivalent`}
-          icon={CheckCircle2}
-          accentColor="#10b981"
-          extraBadge={lateCount > 0 ? `${lateCount} Late` : null}
-        />
-
-        <StatCard
-          title="Leave"
-          value={leaveCount}
-          subValue={`${leaveCount / 2} day equivalent`}
-          icon={XCircle}
-          accentColor="#ef4444"
-        />
-
-        <StatCard
-          title="Late Shifts"
-          value={lateCount}
-          subValue="Present with delay"
-          icon={Clock}
-          accentColor="#8b5cf6"
-        />
-
-        <StatCard
-          title="Not Recorded"
-          value={notRecorded}
-          subValue="Awaiting entry"
-          icon={HelpCircle}
-          accentColor="#94a3b8"
-        />
+      {/* Recent Entries */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.625rem', marginTop: '0.25rem' }}>
+        <span className="section-label" style={{ margin: 0 }}>Recent Entries</span>
+        <button onClick={() => onNavigate('attendance')} className="btn btn-secondary btn-sm">
+          View All <ChevronRight size={12} />
+        </button>
       </div>
 
-      {/* Quick Entry & Attendance Donut Row */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '1.25rem',
-          alignItems: 'start'
-        }}
-      >
-        {/* Quick Entry Box */}
-        <QuickEntryCard
-          todayDate={new Date()}
-          morningShift={todayShifts.morning}
-          eveningShift={todayShifts.evening}
-          onRefresh={fetchData}
-          onOpenFullEntry={() => onNavigate('daily-entry')}
-        />
-
-        {/* Attendance Rate Donut Chart */}
-        <AttendanceChart
-          present={presentCount}
-          leave={leaveCount}
-          late={lateCount}
-          notRecorded={notRecorded}
-          attendancePercentage={attendancePercentage}
-        />
-      </div>
-
-      {/* Highlights: Most Prepared Dishes & Recent Entries */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '1.25rem'
-        }}
-      >
-        {/* Recent Entries Feed */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>
-              Recent Entries
-            </h3>
-            <button
-              onClick={() => onNavigate('attendance')}
-              className="btn btn-secondary btn-sm"
-              style={{ gap: '0.25rem' }}
-            >
-              <span>View All</span>
-              <ChevronRight size={14} />
-            </button>
+      <div className="card" style={{ padding: '0.75rem' }}>
+        {recentShifts.length === 0 ? (
+          <div style={{ padding: '1.5rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+            No shifts recorded yet for this month.
           </div>
-
-          {recentShifts.length === 0 ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              No shifts recorded yet for this month.
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {recentShifts.map((shift) => (
-                <div
-                  key={shift._id}
-                  onClick={() => handleEditShift(shift)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0.75rem 1rem',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border)',
-                    backgroundColor: 'var(--bg-surface-subtle)',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--primary)';
-                    e.currentTarget.style.backgroundColor = '#ffffff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.backgroundColor = 'var(--bg-surface-subtle)';
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div>
-                      <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>
-                        {formatDateShort(shift.dateString || shift.date)}
-                      </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '2px' }}>
-                        <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', textTransform: 'capitalize' }}>
-                          {shift.shift === 'morning' ? '🌅 Morning' : '🌙 Evening'}
-                        </span>
-                        <StatusBadge status={shift.status} size="sm" />
-                      </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {recentShifts.map(shift => (
+              <div
+                key={shift._id}
+                onClick={() => { setSelectedShiftForEdit(shift); setIsEditModalOpen(true); }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '0.75rem', borderRadius: 'var(--radius-sm)',
+                  background: 'var(--bg-surface-subtle)', cursor: 'pointer'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span style={{ fontSize: '1rem' }}>{shift.shift === 'morning' ? '🌅' : '🌙'}</span>
+                  <div>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                      {formatDateShort(shift.dateString || shift.date)}
+                    </div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 700, textTransform: 'capitalize' }}>
+                      {shift.shift} Shift
                     </div>
                   </div>
-
-                  {/* Food / Reason / Note preview */}
-                  <div style={{ textAlign: 'right', maxWidth: '55%' }}>
-                    {shift.foods && shift.foods.length > 0 ? (
-                      <p style={{ fontSize: '0.8125rem', fontWeight: '600', color: 'var(--primary)', truncate: 'true' }}>
-                        🍲 {shift.foods.map((f) => f.name || f).join(', ')}
-                      </p>
-                    ) : shift.reason ? (
-                      <p style={{ fontSize: '0.8125rem', color: '#b91c1c', fontWeight: '600' }}>
-                        {shift.reason}
-                      </p>
-                    ) : (
-                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        {shift.note || 'No notes'}
-                      </p>
-                    )}
-                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Top Food Summary Card */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Award size={20} color="#f59e0b" />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: 'var(--text-main)' }}>
-                Food Preparation Highlights
-              </h3>
-            </div>
-            <button
-              onClick={() => onNavigate('food-analysis')}
-              className="btn btn-secondary btn-sm"
-              style={{ gap: '0.25rem' }}
-            >
-              <span>Analysis</span>
-              <ChevronRight size={14} />
-            </button>
+                <StatusBadge status={shift.status} size="sm" />
+              </div>
+            ))}
           </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-            <div
-              style={{
-                padding: '1rem',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: '#fef3c7',
-                border: '1px solid #fde68a'
-              }}
-            >
-              <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#b45309', textTransform: 'uppercase' }}>
-                🥇 Most Prepared
-              </span>
-              <h4 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#92400e', marginTop: '0.25rem' }}>
-                {reportData?.mostPreparedFood?.name || '—'}
-              </h4>
-              <p style={{ fontSize: '0.8125rem', fontWeight: '600', color: '#b45309', marginTop: '0.2rem' }}>
-                {reportData?.mostPreparedFood ? `${reportData.mostPreparedFood.count} times` : 'No meals recorded'}
-              </p>
-            </div>
-
-            <div
-              style={{
-                padding: '1rem',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: '#f1f5f9',
-                border: '1px solid #e2e8f0'
-              }}
-            >
-              <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#475569', textTransform: 'uppercase' }}>
-                🥈 2nd Most Prepared
-              </span>
-              <h4 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#1e293b', marginTop: '0.25rem' }}>
-                {reportData?.secondMostPreparedFood?.name || '—'}
-              </h4>
-              <p style={{ fontSize: '0.8125rem', fontWeight: '600', color: '#64748b', marginTop: '0.2rem' }}>
-                {reportData?.secondMostPreparedFood ? `${reportData.secondMostPreparedFood.count} times` : '—'}
-              </p>
-            </div>
-          </div>
-
-          {/* Ranking preview */}
-          <div>
-            <h4 style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-              Top Dishes Rank
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              {(reportData?.foodRanking || []).slice(0, 5).map((food, idx) => (
-                <div
-                  key={food.name}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0.4rem 0.6rem',
-                    borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'var(--bg-surface-subtle)',
-                    fontSize: '0.8125rem'
-                  }}
-                >
-                  <span style={{ fontWeight: '600' }}>
-                    {idx + 1}. {food.name}
-                  </span>
-                  <span style={{ fontWeight: '700', color: 'var(--primary)' }}>
-                    {food.count} times
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Edit Shift Modal */}
+      {/* Top Dishes */}
+      {(reportData?.foodRanking || []).length > 0 && (
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.625rem', marginTop: '0.25rem' }}>
+            <span className="section-label" style={{ margin: 0 }}>Top Dishes This Month</span>
+            <button onClick={() => onNavigate('food-analysis')} className="btn btn-secondary btn-sm">
+              Analysis <ChevronRight size={12} />
+            </button>
+          </div>
+          <div className="card" style={{ padding: '0.875rem' }}>
+            {reportData.foodRanking.slice(0, 5).map((food, idx) => (
+              <div key={food.name} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '0.5rem 0',
+                borderBottom: idx < 4 ? '1px solid var(--border)' : 'none'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                  <span style={{
+                    width: 24, height: 24, borderRadius: '50%',
+                    background: idx === 0 ? '#fef3c7' : idx === 1 ? '#f1f5f9' : '#fef9ee',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.75rem', fontWeight: 800,
+                    color: idx === 0 ? '#b45309' : idx === 1 ? '#475569' : '#92400e'
+                  }}>
+                    {idx + 1}
+                  </span>
+                  <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{food.name}</span>
+                </div>
+                <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: 'var(--primary)' }}>{food.count}×</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       <EditShiftModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         shift={selectedShiftForEdit}
         dishes={dishes}
-        onDishCreated={(newDish) => setDishes((prev) => [...prev, newDish])}
+        onDishCreated={nd => setDishes(p => [...p, nd])}
         onShiftSaved={fetchData}
         onShiftDeleted={fetchData}
       />
