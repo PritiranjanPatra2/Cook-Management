@@ -10,16 +10,20 @@ import {
   PlusCircle,
   LogOut,
   X,
-  Sparkles
+  Sparkles,
+  Wallet,
+  UtensilsCrossed
 } from 'lucide-react';
 
 const NAV_ITEMS = [
+  { id: 'today-menu', label: "What Cook Made", icon: UtensilsCrossed },
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'daily-entry', label: 'Daily Entry', icon: PlusCircle },
+  { id: 'salary', label: 'Cook Salary (₹5K)', icon: Wallet },
   { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
-  { id: 'food-meals', label: 'Food / Meals', icon: ChefHat },
+  { id: 'food-meals', label: 'Food Library', icon: ChefHat },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
-  { id: 'reports', label: 'Reports', icon: FileBarChart },
+  { id: 'reports', label: 'Monthly Reports', icon: FileBarChart },
   { id: 'food-analysis', label: 'Food Analysis', icon: BarChart3 },
   { id: 'settings', label: 'Settings', icon: Settings }
 ];

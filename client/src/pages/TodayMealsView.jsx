@@ -17,15 +17,18 @@ import {
 } from 'lucide-react';
 import { shiftService } from '../services/shiftService';
 import { dishService } from '../services/dishService';
+import { salaryService } from '../services/salaryService';
 import { toYYYYMMDD, formatDate } from '../utils/dateUtils';
 import StatusBadge from '../components/StatusBadge';
 import EditShiftModal from '../components/EditShiftModal';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { Wallet } from 'lucide-react';
 
 export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
   const [loading, setLoading] = useState(true);
   const [todayShifts, setTodayShifts] = useState({ morning: null, evening: null });
   const [dishes, setDishes] = useState([]);
+  const [salaryDueInfo, setSalaryDueInfo] = useState(null);
   const [selectedShiftForEdit, setSelectedShiftForEdit] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -38,9 +41,10 @@ export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
   const fetchTodayData = async () => {
     try {
       setLoading(true);
-      const [shiftRes, dishRes] = await Promise.all([
+      const [shiftRes, dishRes, salaryRes] = await Promise.all([
         shiftService.getShifts({ date: todayStr }),
-        dishService.getDishes()
+        dishService.getDishes(),
+        salaryService.getSalaryStatus().catch(() => ({ success: false }))
       ]);
 
       if (shiftRes.success && shiftRes.data) {
@@ -51,6 +55,14 @@ export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
 
       if (dishRes.success && dishRes.data) {
         setDishes(dishRes.data);
+      }
+
+      if (salaryRes?.success && salaryRes?.data) {
+        if (salaryRes.data.isDue && !salaryRes.data.currentCycle?.isPaid) {
+          setSalaryDueInfo(salaryRes.data.currentCycle);
+        } else {
+          setSalaryDueInfo(null);
+        }
       }
     } catch (err) {
       console.error('Error fetching today meal data:', err);
@@ -205,7 +217,42 @@ export default function TodayMealsView({ onNavigate, cookName = 'Cook' }) {
 
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {/* Top Banner Header */}
+      {/* ── Salary Due Notification Banner (After 17th) ── */}
+      {salaryDueInfo && (
+        <div
+          onClick={() => onNavigate('salary')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.75rem 1rem',
+            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+            border: '1px solid rgba(245, 158, 11, 0.4)',
+            borderRadius: 'var(--radius-md)',
+            cursor: 'pointer',
+            gap: '0.75rem',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <span style={{ fontSize: '1.25rem' }}>💰</span>
+            <div>
+              <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: '#F59E0B' }}>
+                Cook Salary Due (Cycle ending 17th)
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                Is ₹5,000 salary paid to {cookName}? Click to select Paid or Not.
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', fontWeight: 800, color: '#F59E0B' }}>
+            <span>Pay Status</span>
+            <ArrowRight size={14} />
+          </div>
+        </div>
+      )}
+
+      {/* ── Header Bar ── */}
       <div
         className="card"
         style={{
