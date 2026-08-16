@@ -12,7 +12,8 @@ import {
   X,
   Sparkles,
   Wallet,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Flame
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'daily-entry', label: 'Daily Entry', icon: PlusCircle },
   { id: 'salary', label: 'Cook Salary (₹5K)', icon: Wallet },
+  { id: 'cylinder', label: 'LPG Gas Cylinder', icon: Flame },
   { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
   { id: 'food-meals', label: 'Food Library', icon: ChefHat },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
