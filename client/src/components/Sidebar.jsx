@@ -13,7 +13,8 @@ import {
   Sparkles,
   Wallet,
   UtensilsCrossed,
-  Flame
+  Flame,
+  ShoppingCart
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { id: 'daily-entry', label: 'Daily Entry', icon: PlusCircle },
   { id: 'salary', label: 'Cook Salary (₹5K)', icon: Wallet },
   { id: 'cylinder', label: 'LPG Gas Cylinder', icon: Flame },
+  { id: 'groceries', label: 'Kitchen Groceries', icon: ShoppingCart },
   { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
   { id: 'food-meals', label: 'Food Library', icon: ChefHat },
   { id: 'calendar', label: 'Calendar', icon: Calendar },

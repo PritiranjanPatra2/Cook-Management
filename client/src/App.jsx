@@ -18,6 +18,7 @@ import Dashboard from './pages/Dashboard';
 import DailyEntry from './pages/DailyEntry';
 import SalaryPage from './pages/SalaryPage';
 import CylinderPage from './pages/CylinderPage';
+import GroceryPage from './pages/GroceryPage';
 import Attendance from './pages/Attendance';
 import FoodMeals from './pages/FoodMeals';
 import CalendarPage from './pages/CalendarPage';
@@ -26,7 +27,7 @@ import FoodAnalysis from './pages/FoodAnalysis';
 import Settings from './pages/Settings';
 import { settingsService } from './services/settingsService';
 import { formatDate } from './utils/dateUtils';
-import { Wallet, Download, Flame } from 'lucide-react';
+import { Wallet, Download, Flame, ShoppingCart } from 'lucide-react';
 
 const BOTTOM_TABS = [
   { id: 'today-menu',  label: "Today's Food", icon: UtensilsCrossed },
@@ -42,6 +43,7 @@ const DRAWER_ITEMS = [
   { id: 'daily-entry',   label: 'Daily Entry',          icon: ClipboardList },
   { id: 'salary',        label: 'Cook Salary (₹5K)',    icon: Wallet },
   { id: 'cylinder',      label: 'LPG Gas Cylinder',     icon: Flame },
+  { id: 'groceries',     label: 'Kitchen Groceries',    icon: ShoppingCart },
   { id: 'calendar',      label: 'Calendar',             icon: CalendarDays },
   { id: 'attendance',    label: 'Attendance',           icon: BarChart2 },
   { id: 'reports',       label: 'Monthly Reports',      icon: BookOpen },
@@ -56,6 +58,7 @@ const TAB_TITLES = {
   'daily-entry':  'Daily Entry',
   salary:         'Cook Salary & Payment Status',
   cylinder:       'LPG Gas Cylinder & Refill Predictor',
+  groceries:      'Smart Kitchen Grocery & Pantry',
   attendance:     'Attendance',
   'food-meals':   'Food Library',
   calendar:       'Calendar',
@@ -116,6 +119,7 @@ export default function App() {
       case 'daily-entry':    return <DailyEntry onSavedNavigate={() => navigate('today-menu')} />;
       case 'salary':         return <SalaryPage cookName={settings.cookName} onNavigate={navigate} />;
       case 'cylinder':       return <CylinderPage onNavigate={navigate} />;
+      case 'groceries':      return <GroceryPage onNavigate={navigate} />;
       case 'attendance':     return <Attendance onNavigate={navigate} />;
       case 'food-meals':     return <FoodMeals />;
       case 'calendar':       return <CalendarPage onNavigate={() => navigate('daily-entry')} />;
