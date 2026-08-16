@@ -1,0 +1,29 @@
+{
+  "name": "cook-routine-tracker",
+  "version": "1.0.0",
+  "description": "Full MERN Cook Daily Routine & Attendance Tracker",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,magenta\" \"npm run server\" \"npm run client\"",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "seed": "node server/seed.js",
+    "clean": "node server/cleanShifts.js",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "mern",
+    "cook-tracker",
+    "attendance",
+    "routine",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC"
+}
