@@ -93,50 +93,23 @@ export default function CalendarPage({ onNavigate }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          backgroundColor: '#ffffff'
+          gap: '0.5rem'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <CalendarIcon size={20} />
-          </div>
-          <div>
-            <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Monthly Calendar
-            </span>
-            <h3 style={{ fontSize: '1.375rem', fontWeight: '800', color: 'var(--text-main)' }}>
-              {MONTH_NAMES[month - 1]} {year}
-            </h3>
-          </div>
+        <div>
+          <div style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Calendar</div>
+          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: '800', color: 'var(--text-main)' }}>
+            {MONTH_NAMES[month - 1]} {year}
+          </h3>
         </div>
 
-        {/* Month Navigator Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <button onClick={handlePrevMonth} className="btn btn-secondary btn-sm" title="Previous Month">
-            <ChevronLeft size={16} />
-            <span>Prev</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <button onClick={handlePrevMonth} className="date-nav-btn">
+            <ChevronLeft size={14} />
           </button>
-
-          <button onClick={handleToday} className="btn btn-secondary btn-sm">
-            Today
-          </button>
-
-          <button onClick={handleNextMonth} className="btn btn-secondary btn-sm" title="Next Month">
-            <span>Next</span>
-            <ChevronRight size={16} />
+          <button onClick={handleToday} className="date-nav-btn date-nav-today">Today</button>
+          <button onClick={handleNextMonth} className="date-nav-btn">
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>
@@ -148,59 +121,58 @@ export default function CalendarPage({ onNavigate }) {
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '1.25rem',
-          padding: '0.75rem 1rem',
+          gap: '0.75rem',
+          padding: '0.625rem 0.75rem',
           backgroundColor: '#ffffff',
           borderRadius: 'var(--radius-md)',
           border: '1px solid var(--border)',
-          fontSize: '0.8125rem'
+          fontSize: '0.75rem'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span className="status-dot present" />
-          <span style={{ fontWeight: '600' }}>🟢 Present</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <span className="status-dot present" style={{ width: 8, height: 8 }} />
+          <span style={{ fontWeight: '600' }}>Present</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span className="status-dot leave" />
-          <span style={{ fontWeight: '600' }}>🔴 Leave</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <span className="status-dot leave" style={{ width: 8, height: 8 }} />
+          <span style={{ fontWeight: '600' }}>Leave</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span className="status-dot late" />
-          <span style={{ fontWeight: '600' }}>🟣 Late</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <span className="status-dot late" style={{ width: 8, height: 8 }} />
+          <span style={{ fontWeight: '600' }}>Late</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span className="status-dot unrecorded" />
-          <span style={{ fontWeight: '600', color: 'var(--text-muted)' }}>⚪ Not Recorded</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <span className="status-dot unrecorded" style={{ width: 8, height: 8 }} />
+          <span style={{ fontWeight: '600', color: 'var(--text-muted)' }}>Not Recorded</span>
         </div>
-        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', borderLeft: '1px solid var(--border)', paddingLeft: '1rem' }}>
-          💡 Dot 1 = Morning, Dot 2 = Evening
-        </span>
+        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>• Dot 1 = Morning, Dot 2 = Evening</span>
       </div>
 
       {loading ? (
         <LoadingSpinner text="Generating calendar view..." />
       ) : (
         /* Calendar Grid */
-        <div className="card" style={{ padding: '1rem' }}>
+        <div className="card" style={{ padding: '0.5rem' }}>
           {/* Day of week headers */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '0.5rem',
+              gap: '2px',
               textAlign: 'center',
-              marginBottom: '0.5rem'
+              marginBottom: '4px'
             }}
           >
             {DAY_NAMES_SHORT.map((day) => (
               <div
                 key={day}
                 style={{
-                  padding: '0.5rem',
-                  fontSize: '0.8125rem',
+                  padding: '4px 0',
+                  fontSize: '0.6rem',
                   fontWeight: '700',
                   color: 'var(--text-muted)',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  textAlign: 'center'
                 }}
               >
                 {day}
@@ -213,7 +185,7 @@ export default function CalendarPage({ onNavigate }) {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '0.5rem'
+              gap: '2px'
             }}
           >
             {calendarGrid.map((day, idx) => {
@@ -222,10 +194,10 @@ export default function CalendarPage({ onNavigate }) {
                   <div
                     key={`empty-${idx}`}
                     style={{
-                      minHeight: '85px',
-                      borderRadius: 'var(--radius-md)',
+                      minHeight: '60px',
+                      borderRadius: '6px',
                       backgroundColor: 'var(--bg-surface-subtle)',
-                      opacity: 0.35
+                      opacity: 0.25
                     }}
                   />
                 );
@@ -239,71 +211,44 @@ export default function CalendarPage({ onNavigate }) {
                   key={day.dateString}
                   onClick={() => handleDayClick(day)}
                   style={{
-                    minHeight: '85px',
-                    padding: '0.6rem',
-                    borderRadius: 'var(--radius-md)',
+                    minHeight: '60px',
+                    padding: '5px 2px 4px',
+                    borderRadius: '6px',
                     border: `1.5px solid ${isToday ? 'var(--primary)' : 'var(--border)'}`,
                     backgroundColor: isToday ? 'var(--primary-light)' : '#ffffff',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
-                    transition: 'all 0.15s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'none';
+                    gap: '4px',
+                    overflow: 'hidden'
                   }}
                 >
                   {/* Day Number */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span
-                      style={{
-                        fontSize: '0.875rem',
-                        fontWeight: isToday ? '800' : '700',
-                        color: isToday ? 'var(--primary)' : 'var(--text-main)'
-                      }}
-                    >
-                      {day.dayNumber}
-                    </span>
-                    {isToday && (
-                      <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--primary)', textTransform: 'uppercase' }}>
-                        Today
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Morning & Evening Dual Dots */}
-                  <div
+                  <span
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem',
-                      padding: '0.35rem 0',
-                      backgroundColor: 'var(--bg-surface-subtle)',
-                      borderRadius: 'var(--radius-sm)'
+                      fontSize: '0.8125rem',
+                      fontWeight: isToday ? '800' : '600',
+                      color: isToday ? 'var(--primary)' : 'var(--text-main)',
+                      lineHeight: 1
                     }}
                   >
-                    {/* Morning shift dot */}
-                    <div title={`Morning: ${morning?.status || 'Not Recorded'}`}>
-                      <span
-                        className={`status-dot ${morning?.status || 'unrecorded'}`}
-                        style={{ width: '10px', height: '10px' }}
-                      />
-                    </div>
+                    {day.dayNumber}
+                  </span>
 
-                    {/* Evening shift dot */}
-                    <div title={`Evening: ${evening?.status || 'Not Recorded'}`}>
-                      <span
-                        className={`status-dot ${evening?.status || 'unrecorded'}`}
-                        style={{ width: '10px', height: '10px' }}
-                      />
-                    </div>
+                  {/* Morning & Evening Dual Dots */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
+                    <span
+                      className={`status-dot ${morning?.status || 'unrecorded'}`}
+                      style={{ width: '7px', height: '7px', flexShrink: 0 }}
+                      title={`Morning: ${morning?.status || 'Not Recorded'}`}
+                    />
+                    <span
+                      className={`status-dot ${evening?.status || 'unrecorded'}`}
+                      style={{ width: '7px', height: '7px', flexShrink: 0 }}
+                      title={`Evening: ${evening?.status || 'Not Recorded'}`}
+                    />
                   </div>
                 </div>
               );
