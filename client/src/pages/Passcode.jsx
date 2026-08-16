@@ -24,15 +24,21 @@ export default function Passcode({ onAuthenticated }) {
   const verify = async (code) => {
     try {
       setLoading(true);
+      setErrorMsg('');
       const res = await settingsService.verifyPasscode(code);
       if (res.success) {
         localStorage.setItem('cook_tracker_auth', 'true');
         onAuthenticated();
       } else {
-        triggerError('Wrong passcode. Try 7894');
+        triggerError(res.message || 'Wrong passcode. Try 7894');
       }
     } catch (err) {
-      triggerError('Wrong passcode. Try again.');
+      if (err.status === 401) {
+        triggerError('Wrong passcode. Default is 7894');
+      } else {
+        console.error('Backend connection error during passcode verification:', err);
+        triggerError('Unable to connect to backend server. Please verify backend URL & MongoDB.');
+      }
     } finally {
       setLoading(false);
     }
