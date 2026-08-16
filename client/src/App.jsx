@@ -25,7 +25,7 @@ import FoodAnalysis from './pages/FoodAnalysis';
 import Settings from './pages/Settings';
 import { settingsService } from './services/settingsService';
 import { formatDate } from './utils/dateUtils';
-import { Wallet } from 'lucide-react';
+import { Wallet, Download } from 'lucide-react';
 
 const BOTTOM_TABS = [
   { id: 'today-menu',  label: "Today's Food", icon: UtensilsCrossed },
@@ -68,6 +68,26 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('today-menu');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [settings, setSettings] = useState({ cookName: 'Cook', trackingStartDate: '2026-08-16' });
+  const [installPrompt, setInstallPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setInstallPrompt(null);
+    }
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -214,8 +234,19 @@ export default function App() {
               })}
             </div>
 
-            {/* Logout */}
-            <div style={{ borderTop: '1px solid var(--border)', padding: '0.5rem 0 1.5rem' }}>
+            {/* PWA Install Button & Logout */}
+            <div style={{ borderTop: '1px solid var(--border)', padding: '0.5rem 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              {installPrompt && (
+                <button
+                  className="drawer-nav-item"
+                  onClick={handleInstallClick}
+                  style={{ color: 'var(--highlight)', fontWeight: 700 }}
+                >
+                  <Download size={18} color="var(--highlight)" />
+                  <span>📲 Install App on Phone</span>
+                </button>
+              )}
+
               <button
                 className="drawer-nav-item"
                 onClick={() => {
