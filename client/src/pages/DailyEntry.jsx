@@ -87,13 +87,23 @@ export default function DailyEntry() {
 
   useEffect(() => { if (selectedDate) loadDateShifts(selectedDate); }, [selectedDate]);
 
+  const todayStr = toYYYYMMDD(new Date());
+  const isToday = selectedDate === todayStr;
+  const isFuture = selectedDate > todayStr;
+
   const changeDay = (delta) => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() + delta);
-    setSelectedDate(toYYYYMMDD(d));
+    const nextDate = toYYYYMMDD(d);
+    if (delta > 0 && nextDate > todayStr) return;
+    setSelectedDate(nextDate);
   };
 
   const handleSaveMorning = async () => {
+    if (isFuture) {
+      showToast('Cannot save shifts for future dates', 'error');
+      return;
+    }
     try {
       setSavingMorning(true);
       await shiftService.saveShift({ date: selectedDate, shift: 'morning', ...morningShift });
@@ -103,6 +113,10 @@ export default function DailyEntry() {
   };
 
   const handleSaveNight = async () => {
+    if (isFuture) {
+      showToast('Cannot save shifts for future dates', 'error');
+      return;
+    }
     try {
       setSavingNight(true);
       await shiftService.saveShift({ date: selectedDate, shift: 'evening', ...eveningShift });
@@ -112,6 +126,10 @@ export default function DailyEntry() {
   };
 
   const handleSaveBoth = async () => {
+    if (isFuture) {
+      showToast('Cannot save shifts for future dates', 'error');
+      return;
+    }
     try {
       setSavingAll(true);
       await shiftService.batchSaveDayShifts({ date: selectedDate, morning: morningShift, evening: eveningShift });
@@ -130,10 +148,30 @@ export default function DailyEntry() {
     else handleSaveNight();
   };
 
-  const isToday = selectedDate === toYYYYMMDD(new Date());
-
   return (
     <div className="fade-in">
+      {/* Future Date Warning Alert */}
+      {isFuture && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.65rem 0.85rem',
+            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+            border: '1px solid rgba(239, 68, 68, 0.35)',
+            borderRadius: 'var(--radius-md)',
+            color: '#f87171',
+            fontSize: '0.8125rem',
+            fontWeight: 700,
+            marginBottom: '0.875rem'
+          }}
+        >
+          <AlertTriangle size={16} />
+          <span>Future Date: You cannot log or update shifts for future dates.</span>
+        </div>
+      )}
+
       {/* Date Selector Card */}
       <div className="card" style={{ marginBottom: '0.875rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem' }}>
@@ -161,8 +199,15 @@ export default function DailyEntry() {
           >
             <input
               type="date"
+              max={todayStr}
               value={selectedDate}
-              onChange={e => setSelectedDate(e.target.value)}
+              onChange={e => {
+                if (e.target.value > todayStr) {
+                  showToast('Cannot select a future date', 'error');
+                  return;
+                }
+                setSelectedDate(e.target.value);
+              }}
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -225,8 +270,13 @@ export default function DailyEntry() {
           <button
             className="date-nav-btn"
             onClick={() => changeDay(1)}
-            style={{ padding: '0.4rem 0.65rem' }}
-            title="Next Day"
+            disabled={selectedDate >= todayStr}
+            style={{
+              padding: '0.4rem 0.65rem',
+              opacity: selectedDate >= todayStr ? 0.35 : 1,
+              cursor: selectedDate >= todayStr ? 'not-allowed' : 'pointer'
+            }}
+            title={selectedDate >= todayStr ? 'Cannot navigate to future dates' : 'Next Day'}
           >
             <span>Next</span>
             <ChevronRight size={15} />
@@ -237,7 +287,7 @@ export default function DailyEntry() {
         {!isToday && (
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.45rem' }}>
             <button
-              onClick={() => setSelectedDate(toYYYYMMDD(new Date()))}
+              onClick={() => setSelectedDate(todayStr)}
               className="date-nav-btn date-nav-today"
               style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem' }}
             >

@@ -309,16 +309,22 @@ export default function CalendarPage({ onNavigate }) {
               >
                 Close
               </button>
-              <button
-                onClick={() => {
-                  setSelectedDayInfo(null);
-                  onNavigate('daily-entry');
-                }}
-                className="btn btn-primary btn-sm"
-              >
-                <Edit2 size={14} />
-                <span>Open in Daily Entry</span>
-              </button>
+              {selectedDayInfo.dateString <= todayStr ? (
+                <button
+                  onClick={() => {
+                    setSelectedDayInfo(null);
+                    onNavigate('daily-entry');
+                  }}
+                  className="btn btn-primary btn-sm"
+                >
+                  <Edit2 size={14} />
+                  <span>Open in Daily Entry</span>
+                </button>
+              ) : (
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center', fontStyle: 'italic' }}>
+                  Future dates cannot be logged or edited
+                </span>
+              )}
             </div>
           </div>
         </div>

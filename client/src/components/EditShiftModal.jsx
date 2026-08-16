@@ -3,7 +3,7 @@ import { X, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { STATUS_OPTIONS, DEFAULT_REASONS } from '../utils/constants';
 import FoodSelector from './FoodSelector';
 import { shiftService } from '../services/shiftService';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, toYYYYMMDD } from '../utils/dateUtils';
 
 export default function EditShiftModal({
   isOpen,
@@ -15,6 +15,10 @@ export default function EditShiftModal({
   onShiftDeleted
 }) {
   if (!isOpen || !shift) return null;
+
+  const todayStr = toYYYYMMDD(new Date());
+  const shiftDateStr = shift.dateString || (shift.date ? toYYYYMMDD(new Date(shift.date)) : '');
+  const isFuture = shiftDateStr > todayStr;
 
   const [status, setStatus] = useState(shift.status || 'present');
   const [foods, setFoods] = useState(
@@ -58,6 +62,10 @@ export default function EditShiftModal({
 
   const handleSave = async (e) => {
     e?.preventDefault();
+    if (isFuture) {
+      setErrorMsg('Cannot log or update shifts for future dates.');
+      return;
+    }
     try {
       setIsSaving(true);
       setErrorMsg('');

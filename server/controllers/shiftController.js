@@ -9,6 +9,16 @@ function formatDateString(d) {
   return `${year}-${month}-${day}`;
 }
 
+// Helper to check if dateString is in the future (accounting for timezone buffer)
+function isFutureDate(dateStr) {
+  if (!dateStr) return false;
+  const now = new Date();
+  // Allow up to current calendar day with UTC+14 timezone leeway
+  const maxAllowed = new Date(now.getTime() + 14 * 60 * 60 * 1000);
+  const maxDateStr = formatDateString(maxAllowed);
+  return dateStr > maxDateStr;
+}
+
 // GET /api/shifts
 exports.getShifts = async (req, res, next) => {
   try {
@@ -85,6 +95,13 @@ exports.createOrUpdateShift = async (req, res, next) => {
     const dateObj = new Date(date);
     const dateString = formatDateString(dateObj);
 
+    if (isFutureDate(dateString)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot log or update shifts for future dates'
+      });
+    }
+
     // Normalize foods and foodDetails
     let foodDetailsList = [];
     if (Array.isArray(foodDetails) && foodDetails.length > 0) {
@@ -146,6 +163,13 @@ exports.batchSaveDayShifts = async (req, res, next) => {
 
     const dateObj = new Date(date);
     const dateString = formatDateString(dateObj);
+
+    if (isFutureDate(dateString)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot log or update shifts for future dates'
+      });
+    }
     const results = {};
 
     const normalizeShiftData = (shiftData, shiftType) => {
@@ -217,6 +241,13 @@ exports.updateShiftById = async (req, res, next) => {
     const shift = await Shift.findById(id);
     if (!shift) {
       return res.status(404).json({ success: false, message: 'Shift not found' });
+    }
+
+    if (isFutureDate(shift.dateString)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot update shifts for future dates'
+      });
     }
 
     if (status !== undefined) shift.status = status;
