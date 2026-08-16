@@ -1,12 +1,12 @@
-import React from 'react';
-import { Sun, Moon, Utensils, MessageSquare, AlertTriangle, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sun, Moon, Utensils, AlertTriangle, FileText, CheckCircle2, Edit2, X } from 'lucide-react';
 import FoodSelector from './FoodSelector';
 import { STATUS_OPTIONS, DEFAULT_REASONS } from '../utils/constants';
 
 export default function ShiftCard({
   shiftType, // 'morning' | 'evening'
   shiftTitle, // e.g. "Morning Shift"
-  shiftData, // { status, foods: [], reason, note }
+  shiftData, // { _id, status, foods: [], foodDetails: [], reason, note }
   onChange,
   dishes = [],
   onDishCreated,
@@ -16,6 +16,13 @@ export default function ShiftCard({
 }) {
   const isMorning = shiftType === 'morning';
   const currentStatus = shiftData.status || 'present';
+  const isSaved = Boolean(shiftData?._id);
+  const [isEditing, setIsEditing] = useState(!isSaved);
+
+  // When date changes or shiftData._id updates, set edit state appropriately
+  useEffect(() => {
+    setIsEditing(!Boolean(shiftData?._id));
+  }, [shiftData?._id]);
 
   const handleStatusChange = (newStatus) => {
     onChange({
@@ -49,6 +56,214 @@ export default function ShiftCard({
   const showFoodSection = ['present', 'late'].includes(currentStatus) || (shiftData.foods && shiftData.foods.length > 0);
   const showReasonSection = ['leave', 'other', 'late'].includes(currentStatus);
 
+  // If already saved and not in edit mode -> render "Already Saved" card
+  if (!isEditing && isSaved) {
+    const statusOption = STATUS_OPTIONS.find((o) => o.value === currentStatus) || STATUS_OPTIONS[0];
+
+    const foodItems = [];
+    if (Array.isArray(shiftData.foodDetails) && shiftData.foodDetails.length > 0) {
+      shiftData.foodDetails.forEach((detail) => {
+        const dishId = detail.dish?._id || detail.dish;
+        const dishObj =
+          typeof detail.dish === 'object' && detail.dish?.name
+            ? detail.dish
+            : dishes.find((d) => String(d._id) === String(dishId));
+        const name = dishObj?.name || 'Dish';
+        const category = dishObj?.category || 'Dish';
+        const quantity = detail.quantity || 'Sufficient';
+        foodItems.push({ name, category, quantity });
+      });
+    } else if (Array.isArray(shiftData.foods) && shiftData.foods.length > 0) {
+      shiftData.foods.forEach((food) => {
+        const dishId = food?._id || food;
+        const dishObj =
+          typeof food === 'object' && food?.name
+            ? food
+            : dishes.find((d) => String(d._id) === String(dishId));
+        const name = dishObj?.name || 'Dish';
+        const category = dishObj?.category || 'Dish';
+        foodItems.push({ name, category, quantity: 'Sufficient' });
+      });
+    }
+
+    return (
+      <div
+        className="card"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          borderTop: isMorning ? '3px solid #F59E0B' : '3px solid #7C5CFC',
+          position: 'relative'
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '10px',
+                backgroundColor: isMorning ? 'rgba(245, 158, 11, 0.15)' : 'rgba(124, 92, 252, 0.15)',
+                color: isMorning ? '#F59E0B' : '#A78BFA',
+                border: `1px solid ${isMorning ? 'rgba(245, 158, 11, 0.3)' : 'rgba(124, 92, 252, 0.3)'}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {isMorning ? <Sun size={20} /> : <Moon size={20} />}
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                  {shiftTitle || (isMorning ? '🌅 Morning Shift' : '🌙 Night Shift')}
+                </h3>
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    fontSize: '0.6875rem',
+                    fontWeight: 800,
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: 'var(--radius-full)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                    color: '#10B981',
+                    border: '1px solid rgba(16, 185, 129, 0.35)'
+                  }}
+                >
+                  <CheckCircle2 size={12} />
+                  <span>Already Saved</span>
+                </span>
+              </div>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                {isMorning ? 'Breakfast / Lunch Prep' : 'Dinner / Night Meal Prep'}
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className="btn btn-secondary btn-sm"
+            style={{
+              borderColor: isMorning ? 'rgba(245, 158, 11, 0.4)' : 'rgba(124, 92, 252, 0.4)',
+              color: isMorning ? '#F59E0B' : '#A78BFA',
+              fontWeight: 700,
+              gap: '0.35rem',
+              fontSize: '0.8125rem',
+              padding: '0.35rem 0.75rem'
+            }}
+          >
+            <Edit2 size={14} />
+            <span>Edit Shift</span>
+          </button>
+        </div>
+
+        {/* Saved Snapshot Details */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem',
+            padding: '0.875rem 1rem',
+            backgroundColor: 'var(--bg-secondary)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)'
+          }}
+        >
+          {/* Status Badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)' }}>Status:</span>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.2rem 0.6rem',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: statusOption.bgColor,
+                color: statusOption.textColor,
+                border: `1px solid ${statusOption.borderColor}`,
+                fontSize: '0.8125rem',
+                fontWeight: 700
+              }}
+            >
+              <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: statusOption.dotColor }} />
+              <span>{statusOption.label}</span>
+            </span>
+          </div>
+
+          {/* Meals Prepared */}
+          {['present', 'late'].includes(currentStatus) && (
+            <div>
+              <span style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
+                Meals Prepared ({foodItems.length}):
+              </span>
+              {foodItems.length > 0 ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+                  {foodItems.map((item, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        padding: '0.3rem 0.65rem',
+                        backgroundColor: 'var(--bg-surface-elevated)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-sm)'
+                      }}
+                    >
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                        🍲 {item.name}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.71875rem',
+                          fontWeight: 800,
+                          padding: '0.1rem 0.45rem',
+                          borderRadius: 'var(--radius-full)',
+                          backgroundColor: 'rgba(34, 211, 238, 0.15)',
+                          color: 'var(--secondary-accent)',
+                          border: '1px solid rgba(34, 211, 238, 0.3)'
+                        }}
+                      >
+                        📊 {item.quantity}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                  No specific dishes recorded.
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Reason */}
+          {shiftData.reason && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem' }}>
+              <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Reason:</span>
+              <span style={{ color: '#ef4444', fontWeight: 600 }}>⚠️ {shiftData.reason}</span>
+            </div>
+          )}
+
+          {/* Note */}
+          {shiftData.note && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem' }}>
+              <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Note:</span>
+              <span style={{ color: 'var(--text-secondary)' }}>💬 {shiftData.note}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="card"
@@ -61,7 +276,7 @@ export default function ShiftCard({
       }}
     >
       {/* Shift Card Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <div
             style={{
@@ -88,23 +303,37 @@ export default function ShiftCard({
           </div>
         </div>
 
-        {onSaveSingleShift && (
-          <button
-            type="button"
-            onClick={() => onSaveSingleShift(shiftType)}
-            disabled={isSavingSingle}
-            className="btn btn-secondary btn-sm"
-            style={{
-              borderColor: isMorning ? 'rgba(245, 158, 11, 0.4)' : 'rgba(124, 92, 252, 0.4)',
-              color: isMorning ? '#F59E0B' : '#A78BFA',
-              fontWeight: '700',
-              gap: '0.35rem',
-              fontSize: '0.78125rem'
-            }}
-          >
-            <span>{isSavingSingle ? 'Saving...' : `Save ${isMorning ? 'Morning' : 'Night'} Only`}</span>
-          </button>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          {isSaved && (
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.78125rem', padding: '0.35rem 0.65rem' }}
+            >
+              <X size={13} />
+              <span>Cancel</span>
+            </button>
+          )}
+
+          {onSaveSingleShift && (
+            <button
+              type="button"
+              onClick={() => onSaveSingleShift(shiftType)}
+              disabled={isSavingSingle}
+              className="btn btn-secondary btn-sm"
+              style={{
+                borderColor: isMorning ? 'rgba(245, 158, 11, 0.4)' : 'rgba(124, 92, 252, 0.4)',
+                color: isMorning ? '#F59E0B' : '#A78BFA',
+                fontWeight: '700',
+                gap: '0.35rem',
+                fontSize: '0.78125rem'
+              }}
+            >
+              <span>{isSavingSingle ? 'Saving...' : `Save ${isMorning ? 'Morning' : 'Night'}`}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Status Selector Buttons */}
